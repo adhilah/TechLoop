@@ -1,0 +1,6 @@
+@TechLoop.Api_HostAddress = http://localhost:5264
+
+GET {{TechLoop.Api_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

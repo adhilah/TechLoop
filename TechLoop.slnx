@@ -1,0 +1,6 @@
+<Solution>
+  <Project Path="TechLoop.Api/TechLoop.Api.csproj" />
+  <Project Path="TechLoop.Application/TechLoop.Application.csproj" />
+  <Project Path="TechLoop.Domain/TechLoop.Domain.csproj" />
+  <Project Path="TechLoop.Infrastructure/TechLoop.Infrastructure.csproj" />
+</Solution>

@@ -1,0 +1,188 @@
+﻿using System.Data;
+using Dapper;
+using TechLoop.Application.Interfaces.Repositories;
+using TechLoop.Application.Interfaces.Infrastructure;
+using TechLoop.Domain.Entities;
+
+namespace TechLoop.Infrastructure.Repositories;
+
+public sealed class TopicRepository : ITopicsRepository
+{
+    private readonly IDapperContext _context;
+
+    public TopicRepository(IDapperContext context)
+    {
+        _context = context;
+    }
+    
+    
+    //create topic
+    public async Task<int> CreateAsync(Topic topic, CancellationToken cancellationToken)
+    {
+        const string sql = @"
+INSERT INTO topics
+(
+    technology_id,
+    title,
+    slug,
+    description,
+    image_url,
+    position,
+    status,
+    published_at,
+    published_by,
+    created_by,
+    created_at,
+    updated_at,
+    updated_by,
+    deleted_at,
+    deleted_by
+)
+VALUES
+(
+    @TechnologyId,
+    @Title,
+    @Slug,
+    @Description,
+    @ImageUrl,
+    @Position,
+    @Status,
+    @PublishedAt,
+    @PublishedBy,
+    @CreatedBy,
+    @CreatedAt,
+    @UpdatedAt,
+    @UpdatedBy,
+    @DeletedAt,
+    @DeletedBy
+)
+RETURNING id;
+";
+
+        using var connection = _context.CreateConnection();
+
+        return await connection.ExecuteScalarAsync<int>(
+            new CommandDefinition(sql, topic, cancellationToken: cancellationToken));
+    }
+    
+    //update topic
+    public async Task<int> UpdateAsync(Topic topic, CancellationToken cancellationToken)
+    {
+        const string sql = @"
+UPDATE topic
+SET technology_id = @TechnologyId,
+   title = @Title,
+    slug  = @Slug,
+    description  = @Description,
+    image_url  = @ImageUrl,
+    position   = @Position,
+    status = @Status,
+    updated_by = @UpdatedBy,
+    updated_at = @UpdatedAt
+";
+        using var connection = _context.CreateConnection();
+
+        var rowsAffected = await connection.ExecuteAsync(sql, new
+        {
+            topic.Id,
+            topic.TechnologyId,
+            topic.Title,
+            topic.Description,
+            topic.Slug,
+            topic.ImageUrl,
+            topic.Position,
+            topic.Status,
+            topic.UpdatedBy,
+            topic.UpdatedAt
+
+        });
+        
+        return rowsAffected;
+    }
+    
+    
+    //soft delete
+    public async Task<int> SoftDeleteAsync(int id, Guid deletedBy, CancellationToken cancellationToken)
+    {
+        const string sql = @"
+UPDATE  topic
+SET  deleted_at = @DeletedAt
+    deleted_by= @DeletedBy
+WHERE id = @Id
+AND deleted_at is null;
+";
+
+        using var connection = _context.CreateConnection();
+        return await connection.ExecuteAsync(sql, new
+        {
+            Id = id,
+            DeletedAt = DateTime.UtcNow,
+            DeletedBy = deletedBy
+        });
+    }
+    
+    //Get all topics
+
+    public async Task<IEnumerable<Topic>> GetAllAsync( CancellationToken cancellationToken)
+    {
+        const string sql = @"
+SELECT id,
+        technology_id,
+        title,
+        description,
+        slug,
+        image_url,
+        position,
+        status,
+        published_at AS PublishedAt,
+        published_by AS PublishedBy,
+        created_at AS CreatedAt,
+        created_by AS CreatedBy,
+        updated_at AS UpdatedAt,
+        updated_by as UpdatedBy,
+FROM topics
+WHERE deleted_at is null
+ORDER BY Position;
+";
+        using var connection = _context.CreateConnection();
+        return await connection.QueryAsync<Topic>(
+            new CommandDefinition(sql, cancellationToken: cancellationToken));
+    }
+    
+    //get topic by id
+
+    public async Task<Topic> GetByIdAsync(int id, CancellationToken cancellationToken)
+    {
+        const string sql = @"
+SELECT id,
+        technology_id  as TechnologyId,
+        title,
+        description,
+        slug,
+        description,
+image_url,
+position,
+status,
+published_at as PublishedAt,
+published_by as PublishedBy,
+created_at as CreatedAt,
+created_by as CreatedBy,
+updated_at as UpdatedAt,
+updated_by as UpdatedBy,
+delete_at as DeleteAt,
+delete_by as DeleteBy
+FROM topics
+WHERE id = @Id
+AND deleted_at is null;
+";
+        using var connection = _context.CreateConnection();
+        
+        return await  connection.QuerySingleOrDefaultAsync<Topic>(
+            new CommandDefinition(sql, 
+                new
+                {
+                    Id = id
+                },
+                cancellationToken: cancellationToken));
+    }
+}

@@ -1,0 +1,103 @@
+﻿using TechLoop.Application.DTOs.Auth;
+using TechLoop.Application.Interfaces.Services;
+using TechLoop.Domain.Entities;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.RateLimiting;
+namespace TechLoop.Api.Controllers;
+
+
+[ApiController]
+[Route("[controller]")]
+public class AuthController : ControllerBase
+{
+    private readonly IAuthService _authService;
+    
+    public AuthController(IAuthService authService)
+    {
+        _authService = authService;
+    }
+
+    [EnableRateLimiting("login")]
+    [HttpPost("login")]
+    public async Task<IActionResult> Login(LoginRequest request)
+    {
+        var response = await _authService.LoginAsync(request);
+
+        SetAuthCookies(response);
+
+        return Ok(new
+        {
+            response.Message
+        });
+    }
+
+    [HttpPost("register")]
+    public async Task<IActionResult> Register(RegisterRequest request)
+    {
+        var response = await _authService.RegisterAsync(request);
+        return Created(" ",response);
+    }
+
+    [HttpPost("refresh")]
+    public async Task<IActionResult> Refresh()
+    {
+        var response = await _authService.RefreshTokenAsync(
+            Request.Cookies["refreshToken"]);
+
+        SetAuthCookies(response);
+
+        return Ok(new
+        {
+            response.Message
+        });
+    }
+    
+    
+    [HttpPost("logout")]
+    public async Task<IActionResult> Logout()
+    {
+        var refreshToken = Request.Cookies["refreshToken"];
+
+        await _authService.LogoutAsync(refreshToken);
+
+        DeleteAuthCookies();
+
+        return Ok(new
+        {
+            Message = "Logged out successfully."
+        });
+    }
+
+
+    private void SetAuthCookies(AuthResponse response)
+    {
+        Response.Cookies.Append("accessToken", response.AccessToken, new CookieOptions
+        {
+            HttpOnly = true,
+            Secure = true,
+            SameSite = SameSiteMode.Strict,
+            Expires = DateTimeOffset.UtcNow.AddMinutes(15)
+        });
+        Response.Cookies.Append("refreshToken", response.RefreshToken, new CookieOptions
+        {
+            HttpOnly = true,
+            Secure = true,
+            SameSite = SameSiteMode.Strict,
+            Expires = DateTimeOffset.UtcNow.AddDays(8)
+        });
+    }
+    
+    private void DeleteAuthCookies()
+    {
+        var options = new CookieOptions
+        {
+            HttpOnly = true,
+            Secure = true,
+            SameSite = SameSiteMode.Strict
+        };
+
+        Response.Cookies.Delete("accessToken", options);
+        Response.Cookies.Delete("refreshToken", options);
+    }
+}
+
