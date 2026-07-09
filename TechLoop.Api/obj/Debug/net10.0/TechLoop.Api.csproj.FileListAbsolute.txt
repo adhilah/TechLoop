@@ -56,3 +56,4 @@ C:\Users\Athila\Desktop\.net\TechLoop\TechLoop.Api\bin\Debug\net10.0\TechLoop.Ap
 C:\Users\Athila\Desktop\.net\TechLoop\TechLoop.Api\obj\Debug\net10.0\TechLoop.BA16B015.Up2Date
 C:\Users\Athila\Desktop\.net\TechLoop\TechLoop.Api\obj\Debug\net10.0\TechLoop.Api.genruntimeconfig.cache
 C:\Users\Athila\Desktop\.net\TechLoop\TechLoop.Api\obj\Debug\net10.0\ref\TechLoop.Api.dll
+C:\Users\Athila\Desktop\.net\TechLoop\TechLoop.Api\obj\Debug\net10.0\TechLoop.Api.sourcelink.json

@@ -1,5 +1,6 @@
 ﻿using TechLoop.Application.Features.Topics.DTOs;
 using MediatR;
+using TechLoop.Domain.Enums;
 
 namespace TechLoop.Application.Features.Topics.Commands.UpdateTopic;
 
@@ -8,9 +9,9 @@ public sealed record UpdatedTopicCommand(
     int TechnologyId,
     string Title,
     string Description,
-    string ImageUrl,
+    string? ImageUrl,
     string Slug,
     int Position,
-    string Status
+    ContentStatus Status
     ):IRequest<UpdateTopicResponse>;
 

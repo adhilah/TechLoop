@@ -69,16 +69,19 @@ RETURNING id;
     public async Task<int> UpdateAsync(Topic topic, CancellationToken cancellationToken)
     {
         const string sql = @"
-UPDATE topic
-SET technology_id = @TechnologyId,
-   title = @Title,
-    slug  = @Slug,
-    description  = @Description,
-    image_url  = @ImageUrl,
-    position   = @Position,
+UPDATE topics
+SET
+    technology_id = @TechnologyId,
+    title = @Title,
+    slug = @Slug,
+    description = @Description,
+    image_url = @ImageUrl,
+    position = @Position,
     status = @Status,
     updated_by = @UpdatedBy,
     updated_at = @UpdatedAt
+WHERE id = @Id
+AND deleted_at IS NULL;
 ";
         using var connection = _context.CreateConnection();
 
@@ -105,8 +108,8 @@ SET technology_id = @TechnologyId,
     public async Task<int> SoftDeleteAsync(int id, Guid deletedBy, CancellationToken cancellationToken)
     {
         const string sql = @"
-UPDATE  topic
-SET  deleted_at = @DeletedAt
+UPDATE  topics
+SET  deleted_at = @DeletedAt,
     deleted_by= @DeletedBy
 WHERE id = @Id
 AND deleted_at is null;
@@ -140,6 +143,8 @@ SELECT id,
         created_by AS CreatedBy,
         updated_at AS UpdatedAt,
         updated_by as UpdatedBy,
+        deleted_at AS DeletedAt,
+        deleted_by AS DeletedBy
 FROM topics
 WHERE deleted_at is null
 ORDER BY Position;
@@ -151,29 +156,29 @@ ORDER BY Position;
     
     //get topic by id
 
-    public async Task<Topic> GetByIdAsync(int id, CancellationToken cancellationToken)
+    public async Task<Topic?> GetByIdAsync(int id, CancellationToken cancellationToken)
     {
         const string sql = @"
-SELECT id,
-        technology_id  as TechnologyId,
-        title,
-        description,
-        slug,
-        description,
-image_url,
-position,
-status,
-published_at as PublishedAt,
-published_by as PublishedBy,
-created_at as CreatedAt,
-created_by as CreatedBy,
-updated_at as UpdatedAt,
-updated_by as UpdatedBy,
-delete_at as DeleteAt,
-delete_by as DeleteBy
+SELECT
+    id,
+    technology_id AS TechnologyId,
+    title,
+    description,
+    slug,
+    image_url,
+    position,
+    status,
+    published_at AS PublishedAt,
+    published_by AS PublishedBy,
+    created_at AS CreatedAt,
+    created_by AS CreatedBy,
+    updated_at AS UpdatedAt,
+    updated_by AS UpdatedBy,
+    deleted_at AS DeletedAt,
+    deleted_by AS DeletedBy
 FROM topics
 WHERE id = @Id
-AND deleted_at is null;
+AND deleted_at IS NULL;
 ";
         using var connection = _context.CreateConnection();
         

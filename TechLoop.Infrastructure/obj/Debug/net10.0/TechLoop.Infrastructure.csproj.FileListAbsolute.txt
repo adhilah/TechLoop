@@ -15,3 +15,4 @@ C:\Users\Athila\Desktop\.net\TechLoop\TechLoop.Infrastructure\obj\Debug\net10.0\
 C:\Users\Athila\Desktop\.net\TechLoop\TechLoop.Infrastructure\obj\Debug\net10.0\refint\TechLoop.Infrastructure.dll
 C:\Users\Athila\Desktop\.net\TechLoop\TechLoop.Infrastructure\obj\Debug\net10.0\TechLoop.Infrastructure.pdb
 C:\Users\Athila\Desktop\.net\TechLoop\TechLoop.Infrastructure\obj\Debug\net10.0\ref\TechLoop.Infrastructure.dll
+C:\Users\Athila\Desktop\.net\TechLoop\TechLoop.Infrastructure\obj\Debug\net10.0\TechLoop.Infrastructure.sourcelink.json

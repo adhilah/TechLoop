@@ -13,3 +13,4 @@ C:\Users\Athila\Desktop\.net\TechLoop\TechLoop.Application\obj\Debug\net10.0\Tec
 C:\Users\Athila\Desktop\.net\TechLoop\TechLoop.Application\obj\Debug\net10.0\refint\TechLoop.Application.dll
 C:\Users\Athila\Desktop\.net\TechLoop\TechLoop.Application\obj\Debug\net10.0\TechLoop.Application.pdb
 C:\Users\Athila\Desktop\.net\TechLoop\TechLoop.Application\obj\Debug\net10.0\ref\TechLoop.Application.dll
+C:\Users\Athila\Desktop\.net\TechLoop\TechLoop.Application\obj\Debug\net10.0\TechLoop.Application.sourcelink.json
