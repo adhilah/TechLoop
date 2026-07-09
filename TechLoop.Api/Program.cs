@@ -69,7 +69,7 @@ builder.Services.AddScoped<IRefreshTokenRepository, RefreshTokenRepository>();
 
 builder.Services.AddScoped<ITechnologyRepository, TechnologyRepository>();
 builder.Services.AddScoped<ITopicsRepository, TopicRepository>();
-//builder.Services.AddScoped<ISubTopicRepository, SubTopicRepository>();
+builder.Services.AddScoped<ISubTopicsRepository, SubTopicsRepository>();
 //builder.Services.AddScoped<IQuestionRepository, QuestionRepository>();
 
 // Infrastructure

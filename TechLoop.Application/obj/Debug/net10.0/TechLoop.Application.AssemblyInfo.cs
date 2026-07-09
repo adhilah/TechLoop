@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("TechLoop.Application")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+f48e23989d939bb361cbac0ac11b862051507344")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+ca0cd63e4b9e587bbdd6fb344e638eefae7ed294")]
 [assembly: System.Reflection.AssemblyProductAttribute("TechLoop.Application")]
 [assembly: System.Reflection.AssemblyTitleAttribute("TechLoop.Application")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

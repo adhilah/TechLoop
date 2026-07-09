@@ -22,8 +22,7 @@ public sealed class TopicController : ControllerBase
     //Get all topics
     [AllowAnonymous]
     [HttpGet("topics")]
-    public async Task<ActionResult<IEnumerable<TopicResponse>>> GetAllTopics(
-        CancellationToken cancellationToken)
+    public async Task<ActionResult<IEnumerable<TopicResponse>>> GetAllTopics(CancellationToken cancellationToken)
     {
         var result = await _mediator.Send(
             new GetAllTopicQuery(),
@@ -35,14 +34,9 @@ public sealed class TopicController : ControllerBase
     //get topic by id
     [AllowAnonymous]
     [HttpGet("topics/{id:int}")]
-    public async Task<ActionResult<TopicResponse>> GetTopicById(
-        int id,
-        CancellationToken cancellationToken)
+    public async Task<ActionResult<TopicResponse>> GetTopicById(int id, CancellationToken cancellationToken)
     {
-        var result = await _mediator.Send(
-            new GetTopicByIdQuery(id),
-            cancellationToken);
-
+        var result = await _mediator.Send(new GetTopicByIdQuery(id), cancellationToken);
         return Ok(result);
     }
 }

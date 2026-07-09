@@ -3,6 +3,9 @@ using TechLoop.Application.Features.Technologies.DTOs;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using TechLoop.Application.DTOs.SubTopics.Requests;
+using TechLoop.Application.Features.SubTopics.Commands.CreateSubTopic;
+using TechLoop.Application.Features.SubTopics.DTOs;
 using TechLoop.Application.Features.Technologies.Commands.DeleteTechnology;
 using TechLoop.Application.Features.Technologies.Commands.UpdateTechnology;
 using TechLoop.Application.Features.Topics.Commands.CreateTopic;
@@ -115,13 +118,32 @@ public sealed class MentorController : ControllerBase
         return Ok(result);
     }
     
-    //Delete Topic
+    //Soft Delete Topic
     [HttpDelete("topics/{id:int}")]
     public async Task<ActionResult<DeleteTopicResponse>> DeleteTopic(
         int id,
         CancellationToken cancellationToken)
     {
         var command = new DeleteTopicCommand(id);
+
+        var result = await _mediator.Send(command, cancellationToken);
+
+        return Ok(result);
+    }
+    
+    //create subtop
+    [HttpPost("subtopics")]
+    public async Task<ActionResult<CreateSubTopicResponse>> CreateSubTopic(
+        [FromBody] CreateSubTopicRequest request, CancellationToken cancellationToken)
+    {
+        var command = new CreateSubTopicCommand(
+            request.TopicId,
+            request.Title,
+            request.Description,
+            request.ImageUrl,
+            request.Slug,
+            request.Position,
+            request.Status);
 
         var result = await _mediator.Send(command, cancellationToken);
 

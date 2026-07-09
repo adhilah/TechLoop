@@ -1,4 +1,6 @@
-﻿namespace TechLoop.Domain.Entities;
+﻿using TechLoop.Domain.Enums;
+
+namespace TechLoop.Domain.Entities;
 public class SubTopic
 {
     public int Id { get; set; }
@@ -6,9 +8,9 @@ public class SubTopic
     public string Slug { get; set; } = string.Empty;
     public string Title { get; set; } = string.Empty;
     public string Description { get; set; } = string.Empty;
-    public string ImageUrl { get; set; } = string.Empty;
+    public string? ImageUrl { get; set; }
     public int Position { get; set; }
-    public string Status { get; set; } = "Draft";
+    public ContentStatus Status { get; set; }
     public DateTime? PublishedAt { get; set; }
     public Guid? PublishedBy { get; set; }
     public DateTime CreatedAt { get; set; }
