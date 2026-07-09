@@ -14,8 +14,45 @@ public sealed class TopicRepository : ITopicsRepository
     {
         _context = context;
     }
+    //ExistsAync
+    public async Task<bool> ExistsAsync(string title, CancellationToken cancellationToken)
+    {
+        const string sql = @"
+SELECT EXISTS
+(
+    SELECT 1
+    FROM topics
+    WHERE LOWER(title) = LOWER(@Title)
+    AND deleted_at IS NULL
+);";
+
+        using var connection = _context.CreateConnection();
+
+        return await connection.ExecuteScalarAsync<bool>(new CommandDefinition(
+                sql,
+                new { Title = title },
+                cancellationToken: cancellationToken));
+    }
     
-    
+    //TechnologyExistsAsync
+    public async Task<bool> TechnologyExistsAsync(int technologyId, CancellationToken cancellationToken)
+    {
+        const string sql = @"
+SELECT EXISTS
+(
+    SELECT 1
+    FROM technologies
+    WHERE id = @TechnologyId
+);";
+
+        using var connection = _context.CreateConnection();
+
+        return await connection.ExecuteScalarAsync<bool>(
+            new CommandDefinition(
+                sql,
+                new { TechnologyId = technologyId },
+                cancellationToken: cancellationToken));
+    }
     //create topic
     public async Task<int> CreateAsync(Topic topic, CancellationToken cancellationToken)
     {

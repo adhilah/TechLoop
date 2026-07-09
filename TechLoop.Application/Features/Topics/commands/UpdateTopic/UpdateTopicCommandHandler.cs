@@ -1,4 +1,5 @@
 ﻿using MediatR;
+using TechLoop.Application.Common.Exceptions;
 using TechLoop.Application.Features.Topics.DTOs;
 using TechLoop.Application.Interfaces.Repositories;
 using TechLoop.Application.Interfaces.Services;
@@ -9,13 +10,14 @@ public sealed class UpdateTopicCommandHandler
     : IRequestHandler<UpdatedTopicCommand, UpdateTopicResponse>
 {
     private readonly ITopicsRepository _repository;
+    private readonly ITechnologyRepository _technologyRepository;
     private readonly ICurrentUserService _currentUser;
 
     public UpdateTopicCommandHandler(
-        ITopicsRepository repository,
-        ICurrentUserService currentUser)
+        ITopicsRepository repository,ITechnologyRepository technologyRepository,ICurrentUserService currentUser)
     {
         _repository = repository;
+        _technologyRepository = technologyRepository;
         _currentUser = currentUser;
     }
 
@@ -27,6 +29,27 @@ public sealed class UpdateTopicCommandHandler
         if (topic is null)
         {
             throw new KeyNotFoundException("Topic not found.");
+        }
+        
+        var technology = await _technologyRepository.GetByIdAsync(
+            request.TechnologyId,
+            cancellationToken);
+
+        if (technology is null)
+        {
+            throw new NotFoundException("Technology not found.");
+        }
+
+        // Check duplicate topic
+        var exists = await _repository.ExistsAsync(
+            request.Title,
+            cancellationToken);
+
+        if (exists &&
+            !topic.Title.Equals(request.Title, StringComparison.OrdinalIgnoreCase))
+        {
+            throw new ValidationException(
+                $"Topic '{request.Title}' already exists.");
         }
         topic.TechnologyId = request.TechnologyId;
         topic.Title = request.Title;

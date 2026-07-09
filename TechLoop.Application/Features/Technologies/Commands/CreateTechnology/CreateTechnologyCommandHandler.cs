@@ -1,4 +1,5 @@
-﻿using TechLoop.Application.Features.Technologies.DTOs;
+﻿using TechLoop.Application.Common.Exceptions;
+using TechLoop.Application.Features.Technologies.DTOs;
 using TechLoop.Application.Interfaces.Repositories;
 using TechLoop.Application.Interfaces.Services;
 using TechLoop.Domain.Entities;
@@ -10,12 +11,12 @@ public sealed class CreateTechnologyCommandHandler : IRequestHandler<CreateTechn
 {
     private readonly ITechnologyRepository _technologyRepository;
     private readonly ICurrentUserService _currentUserService;
+    private readonly ICategoryRepository _categoryRepository;
 
-    public CreateTechnologyCommandHandler(
-        ITechnologyRepository technologyRepository,
-        ICurrentUserService currentUserService)
+    public CreateTechnologyCommandHandler(ITechnologyRepository technologyRepository, ICategoryRepository categoryRepository, ICurrentUserService currentUserService)
     {
         _technologyRepository = technologyRepository;
+        _categoryRepository = categoryRepository;
         _currentUserService = currentUserService;
     }
 
@@ -26,13 +27,24 @@ public sealed class CreateTechnologyCommandHandler : IRequestHandler<CreateTechn
             cancellationToken);
 
         if (exists)
-            throw new InvalidOperationException(
-                $"Technology '{request.Name}' already exists.");
+        {
+            throw new ValidationException($"Technology '{request.Name}' already exists.");
+        }
+        
+        var categoryExists = await _categoryRepository.ExistsAsync(
+            request.CategoryId,
+            cancellationToken);
+
+        if (!categoryExists)
+        {
+            throw new NotFoundException("Category not found.");
+        }
+        
         var technology = new Technology
         {
             CategoryId = request.CategoryId,
             Name = request.Name.Trim(),
-            Slug = GenerateSlug(request.Name),
+            Slug = request.Slug.Trim().ToLowerInvariant(),
             Description = request.Description ?? string.Empty,
             ImageUrl = request.ImageUrl ?? string.Empty,
             Position = request.Position,

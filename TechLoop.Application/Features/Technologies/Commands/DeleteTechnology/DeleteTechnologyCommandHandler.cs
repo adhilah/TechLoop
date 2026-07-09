@@ -12,30 +12,21 @@ public sealed class DeleteTechnologyCommandHandler : IRequestHandler<DeleteTechn
     private readonly ITechnologyRepository _technologyRepository;
     private readonly ICurrentUserService _currentUserService;
 
-    public DeleteTechnologyCommandHandler(ITechnologyRepository technologyRepository,
-        ICurrentUserService currentUserService)
+    public DeleteTechnologyCommandHandler(ITechnologyRepository technologyRepository, ICurrentUserService currentUserService)
     {
         _technologyRepository = technologyRepository;
         _currentUserService = currentUserService;
     }
 
-    public async Task<DeleteTechnologyResponse> Handle(DeleteTechnologyCommand request,
-        CancellationToken cancellationToken)
+    public async Task<DeleteTechnologyResponse> Handle(DeleteTechnologyCommand request, CancellationToken cancellationToken)
     {
-        var technology = await _technologyRepository.GetByIdAsync(
-            request.Id,
-            cancellationToken);
-
+        var technology = await _technologyRepository.GetByIdAsync(request.Id, cancellationToken);
         if (technology is null)
         {
             throw new NotFoundException("Technology not found.");
         }
 
-        var rowsAffected = await _technologyRepository.SoftDeleteAsync(
-            request.Id,
-            _currentUserService.UserId,
-            cancellationToken);
-
+        var rowsAffected = await _technologyRepository.SoftDeleteAsync(request.Id, _currentUserService.UserId, cancellationToken);
         if (rowsAffected <= 0)
         {
             throw new Exception("Failed to delete technology.");

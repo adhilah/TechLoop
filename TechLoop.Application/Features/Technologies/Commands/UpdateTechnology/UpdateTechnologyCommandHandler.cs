@@ -11,20 +11,36 @@ public sealed class UpdateTechnologyCommandHandler : IRequestHandler<UpdateTechn
 {
    private readonly ITechnologyRepository _technologyRepository;
    private readonly ICurrentUserService _currentUserService;
+   private readonly ICategoryRepository _categoryRepository;
 
-   public UpdateTechnologyCommandHandler(ITechnologyRepository technologyRepository, ICurrentUserService currentUserService)
+   public UpdateTechnologyCommandHandler(ITechnologyRepository technologyRepository, ICategoryRepository categoryRepository, ICurrentUserService currentUserService)
    {
       _technologyRepository = technologyRepository;
+      _categoryRepository = categoryRepository;
       _currentUserService = currentUserService;
    }
 
-   public async Task<UpdateTechnologyResponse> Handle(UpdateTechnologyCommand request,
-      CancellationToken cancellationToken)
+   public async Task<UpdateTechnologyResponse> Handle(UpdateTechnologyCommand request, CancellationToken cancellationToken)
    {
       var technology = await _technologyRepository.GetByIdAsync(request.id, cancellationToken);
       if (technology is null)
       {
          throw new NotFoundException(("Technology not found"));
+      }
+      var exists = await _technologyRepository.ExistsAsync(request.Name, cancellationToken);
+
+      if (exists && !technology.Name.Equals(request.Name, StringComparison.OrdinalIgnoreCase))
+      {
+         throw new ValidationException($"Technology '{request.Name}' already exists.");
+      }
+      
+      var categoryExists = await _categoryRepository.ExistsAsync(
+         request.CategoryId,
+         cancellationToken);
+
+      if (!categoryExists)
+      {
+         throw new NotFoundException("Category not found.");
       }
 
       technology.CategoryId = request.CategoryId;

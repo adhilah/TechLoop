@@ -39,6 +39,28 @@ SELECT EXISTS
                 },
                 cancellationToken: cancellationToken));
     }
+    
+    //CategoryExistsAsync
+    public async Task<bool> CategoryExistsAsync(
+        int categoryId,
+        CancellationToken cancellationToken)
+    {
+        const string sql = @"
+SELECT EXISTS
+(
+    SELECT 1
+    FROM technology_categories
+    WHERE id = @CategoryId
+);";
+
+        using var connection = _context.CreateConnection();
+
+        return await connection.ExecuteScalarAsync<bool>(
+            new CommandDefinition(
+                sql,
+                new { CategoryId = categoryId },
+                cancellationToken: cancellationToken));
+    }
 
     public async Task<int> CreateAsync(Technology technology, CancellationToken cancellationToken)
     {
