@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("TechLoop.Api")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+1d3dd923834068fe79a7d608ca7b07469baf3f45")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+f48e23989d939bb361cbac0ac11b862051507344")]
 [assembly: System.Reflection.AssemblyProductAttribute("TechLoop.Api")]
 [assembly: System.Reflection.AssemblyTitleAttribute("TechLoop.Api")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
