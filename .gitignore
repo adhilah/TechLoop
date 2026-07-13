@@ -1,0 +1,61 @@
+# Build
+-------
+**/bin/
+**/obj/
+
+# Rider
+--------
+.idea/
+*.sln.iml
+
+# Visual Studio
+----------
+.vs/
+*.user
+*.rsuser
+*.suo
+
+# ASP.NET
+----------
+appsettings.Development.json
+secrets.json
+
+# Logs
+-------
+*.log
+logs/
+
+# NuGet
+---------
+packages/
+*.nupkg
+
+# Test
+---------
+TestResults/
+coverage/
+coverage-report/
+
+# Publish
+---------
+publish/
+
+
+# React / Node
+-------
+**/node_modules/
+**/dist/
+**/.vite/
+npm-debug.log*
+yarn-debug.log*
+pnpm-debug.log*
+
+# OS Files
+----------
+.DS_Store
+Thumbs.db
+
+# Environment
+---------
+.env
+.env.*
