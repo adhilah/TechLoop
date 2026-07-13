@@ -40,7 +40,7 @@ public class JwtTokenGenerator : IJwtGenerator
             issuer: _configuration["Jwt:Issuer"],
             audience: _configuration["Jwt:Audience"],
             claims: claims,
-            expires: DateTime.UtcNow.AddMinutes(30),
+            expires: DateTime.UtcNow.AddMinutes(1),
             signingCredentials: credentials
         );
 

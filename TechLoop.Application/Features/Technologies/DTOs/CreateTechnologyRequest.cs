@@ -1,4 +1,6 @@
-﻿namespace TechLoop.Application.Features.Technologies.DTOs;
+﻿using TechLoop.Domain.Enums;
+
+namespace TechLoop.Application.Features.Technologies.DTOs;
 
 public sealed class CreateTechnologyRequest
 {
@@ -8,4 +10,5 @@ public sealed class CreateTechnologyRequest
     public string? Slug { get; set; }
     public string? ImageUrl { get; set; }
     public int Position { get; set; }
+    public ContentStatus Status { get; set; }
 }

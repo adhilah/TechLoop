@@ -7,15 +7,15 @@ public class McqOption
 
     public string OptionText { get; set; } = string.Empty;
 
-    public bool isCorrect { get; set; }
+    public bool IsCorrect { get; set; }
 
-    public int position { get; set; }
+    public int Position { get; set; }
 
    public Guid CreatedBy { get; set; }
 
     public DateTime CreatedAt { get; set; }
     
-    public Guid UpdatedBy { get; set; }
+    public Guid? UpdatedBy { get; set; }
 
-    public DateTime UpdatedAt { get; set; }
+    public DateTime? UpdatedAt { get; set; }
 }

@@ -3,6 +3,7 @@ using TechLoop.Application.Features.Technologies.DTOs;
 using TechLoop.Application.Interfaces.Repositories;
 using TechLoop.Application.Interfaces.Services;
 using TechLoop.Domain.Entities;
+using TechLoop.Domain.Enums;
 using MediatR;
 
 namespace TechLoop.Application.Features.Technologies.Commands.CreateTechnology;
@@ -22,19 +23,23 @@ public sealed class CreateTechnologyCommandHandler : IRequestHandler<CreateTechn
 
     public async Task<CreateTechnologyResponse> Handle(CreateTechnologyCommand request, CancellationToken cancellationToken)
     {
-        var exists = await _technologyRepository.ExistsAsync(
-            request.Name,
-            cancellationToken);
-
+        var exists = await _technologyRepository.ExistsAsync(request.Name, cancellationToken);
         if (exists)
         {
             throw new ValidationException($"Technology '{request.Name}' already exists.");
         }
         
-        var categoryExists = await _categoryRepository.ExistsAsync(
-            request.CategoryId,
-            cancellationToken);
-
+        var slugExists = await _technologyRepository.SlugExistsAsync(request.Slug, cancellationToken);
+        if (slugExists)
+        {
+            throw new ValidationException($"Technology slug '{request.Slug}' already exists.");
+        }
+        var positionExists = await _technologyRepository.PositionExistsAsync(request.Position, cancellationToken);
+        if (positionExists)
+        {
+            throw new ValidationException($"Technology position '{request.Position}' already exists.");
+        }
+        var categoryExists = await _categoryRepository.ExistsAsync(request.CategoryId, cancellationToken);
         if (!categoryExists)
         {
             throw new NotFoundException("Category not found.");
@@ -48,22 +53,15 @@ public sealed class CreateTechnologyCommandHandler : IRequestHandler<CreateTechn
             Description = request.Description ?? string.Empty,
             ImageUrl = request.ImageUrl ?? string.Empty,
             Position = request.Position,
-            Status = "Draft",
-            PublishedAt = null,
-            PublishedBy = null,
+            Status = request.Status,
+            PublishedAt = request.Status == ContentStatus.Published ? DateTime.UtcNow : null,
+            PublishedBy = request.Status == ContentStatus.Published ? _currentUserService.UserId : null,
             CreatedBy = _currentUserService.UserId,
-            CreatedAt = DateTime.UtcNow,
-            UpdatedBy = _currentUserService.UserId,
-            UpdatedAt = DateTime.UtcNow
+            CreatedAt = DateTime.UtcNow
         };
-        var id = await _technologyRepository.CreateAsync(
-            technology,
-            cancellationToken);
+        var id = await _technologyRepository.CreateAsync(technology, cancellationToken);
         
-        var createdTechnology =
-            await _technologyRepository.GetByIdAsync(
-                id,
-                cancellationToken);
+        var createdTechnology = await _technologyRepository.GetByIdAsync(id, cancellationToken);
 
         if (createdTechnology is null)
             throw new Exception("Failed to create technology.");

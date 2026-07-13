@@ -1,4 +1,5 @@
 ﻿using TechLoop.Application.Features.Technologies.DTOs;
+using TechLoop.Domain.Enums;
 using MediatR;
 
 namespace TechLoop.Application.Features.Technologies.Commands.CreateTechnology;
@@ -9,5 +10,6 @@ public sealed record CreateTechnologyCommand(
     string? Description,
     string? Slug,
     string? ImageUrl,
-    int Position
+    int Position,
+    ContentStatus Status
 ) : IRequest<CreateTechnologyResponse>;

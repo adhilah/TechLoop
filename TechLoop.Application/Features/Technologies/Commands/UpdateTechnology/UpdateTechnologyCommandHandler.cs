@@ -3,6 +3,7 @@ using TechLoop.Application.Interfaces.Repositories;
 using TechLoop.Application.Interfaces.Services;
 using MediatR;
 using TechLoop.Application.Common.Exceptions;
+using TechLoop.Domain.Enums;
 
 
 namespace TechLoop.Application.Features.Technologies.Commands.UpdateTechnology;
@@ -33,10 +34,18 @@ public sealed class UpdateTechnologyCommandHandler : IRequestHandler<UpdateTechn
       {
          throw new ValidationException($"Technology '{request.Name}' already exists.");
       }
+      var slugExists = await _technologyRepository.SlugExistsAsync(request.Slug, cancellationToken);
+      if (slugExists && !technology.Slug.Equals(request.Slug, StringComparison.OrdinalIgnoreCase))
+      {
+         throw new ValidationException($"Technology slug '{request.Slug}' already exists.");
+      }
+      var positionExists = await _technologyRepository.PositionExistsAsync(request.Position, cancellationToken);
+      if (positionExists && technology.Position != request.Position)
+      {
+         throw new ValidationException($"Technology position '{request.Position}' already exists.");
+      }
       
-      var categoryExists = await _categoryRepository.ExistsAsync(
-         request.CategoryId,
-         cancellationToken);
+      var categoryExists = await _categoryRepository.ExistsAsync(request.CategoryId, cancellationToken);
 
       if (!categoryExists)
       {
@@ -45,9 +54,9 @@ public sealed class UpdateTechnologyCommandHandler : IRequestHandler<UpdateTechn
 
       technology.CategoryId = request.CategoryId;
       technology.Name =request.Name.Trim();
-      technology.Description = request.Description;
-      technology.Slug = request.Slug;
-      technology.ImageUrl = request.ImageUrl;
+      technology.Description = request.Description ?? string.Empty;
+      technology.Slug = request.Slug.Trim().ToLowerInvariant();
+      technology.ImageUrl = request.ImageUrl ?? string.Empty;
       technology.Position = request.Position;
       technology.UpdatedAt = DateTime.UtcNow;
       technology.UpdatedBy = _currentUserService.UserId;

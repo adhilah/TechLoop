@@ -17,24 +17,17 @@ public sealed class TechnologyController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<IActionResult> GetAll(
-        CancellationToken cancellationToken)
+    public async Task<IActionResult> GetAll(CancellationToken cancellationToken)
     {
-        var result = await _mediator.Send(
-            new GetAllTechnologiesQuery(),
-            cancellationToken);
+        var result = await _mediator.Send(new GetAllTechnologiesQuery(), cancellationToken);
 
         return Ok(result);
     }
 
     [HttpGet("{id:int}")]
-    public async Task<IActionResult> GetById(
-        int id,
-        CancellationToken cancellationToken)
+    public async Task<IActionResult> GetById(int id, CancellationToken cancellationToken)
     {
-        var result = await _mediator.Send(
-            new GetTechnologyByIdQuery(id),
-            cancellationToken);
+        var result = await _mediator.Send(new GetTechnologyByIdQuery(id), cancellationToken);
 
         return Ok(result);
     }

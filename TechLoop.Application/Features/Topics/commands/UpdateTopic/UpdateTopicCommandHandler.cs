@@ -3,27 +3,24 @@ using TechLoop.Application.Common.Exceptions;
 using TechLoop.Application.Features.Topics.DTOs;
 using TechLoop.Application.Interfaces.Repositories;
 using TechLoop.Application.Interfaces.Services;
+using TechLoop.Domain.Enums;
 
 namespace TechLoop.Application.Features.Topics.Commands.UpdateTopic;
 
-public sealed class UpdateTopicCommandHandler
-    : IRequestHandler<UpdatedTopicCommand, UpdateTopicResponse>
+public sealed class UpdateTopicCommandHandler : IRequestHandler<UpdatedTopicCommand, UpdateTopicResponse>
 {
     private readonly ITopicsRepository _repository;
     private readonly ITechnologyRepository _technologyRepository;
     private readonly ICurrentUserService _currentUser;
 
-    public UpdateTopicCommandHandler(
-        ITopicsRepository repository,ITechnologyRepository technologyRepository,ICurrentUserService currentUser)
+    public UpdateTopicCommandHandler(ITopicsRepository repository,ITechnologyRepository technologyRepository,ICurrentUserService currentUser)
     {
         _repository = repository;
         _technologyRepository = technologyRepository;
         _currentUser = currentUser;
     }
 
-    public async Task<UpdateTopicResponse> Handle(
-        UpdatedTopicCommand request,
-        CancellationToken cancellationToken)
+    public async Task<UpdateTopicResponse> Handle(UpdatedTopicCommand request, CancellationToken cancellationToken)
     {
         var topic = await _repository.GetByIdAsync(request.id, cancellationToken);
         if (topic is null)
@@ -31,34 +28,34 @@ public sealed class UpdateTopicCommandHandler
             throw new KeyNotFoundException("Topic not found.");
         }
         
-        var technology = await _technologyRepository.GetByIdAsync(
-            request.TechnologyId,
-            cancellationToken);
-
+        var technology = await _technologyRepository.GetByIdAsync(request.TechnologyId, cancellationToken);
         if (technology is null)
         {
             throw new NotFoundException("Technology not found.");
         }
 
-        // Check duplicate topic
-        var exists = await _repository.ExistsAsync(
-            request.Title,
-            cancellationToken);
-
-        if (exists &&
-            !topic.Title.Equals(request.Title, StringComparison.OrdinalIgnoreCase))
+        var slugExists = await _repository.SlugExistsAsync(request.Slug, cancellationToken);
+        if (slugExists && !topic.Slug.Equals(request.Slug, StringComparison.OrdinalIgnoreCase))
         {
-            throw new ValidationException(
-                $"Topic '{request.Title}' already exists.");
+            throw new ValidationException($"Sub topic slug '{request.Slug}' already exists.");
+        }
+        var positionExists = await _repository.PositionExistsAsync(request.Position, cancellationToken);
+        if (positionExists && topic.Position != request.Position)
+        {
+            throw new ValidationException($"Sub topic position '{request.Position}' already exists.");
+        }
+        
+        var exists = await _repository.ExistsAsync(request.Title, cancellationToken);
+        if (exists && !topic.Title.Equals(request.Title, StringComparison.OrdinalIgnoreCase))
+        {
+            throw new ValidationException($"Topic '{request.Title}' already exists.");
         }
         topic.TechnologyId = request.TechnologyId;
-        topic.Title = request.Title;
+        topic.Title = request.Title.Trim();
         topic.Description = request.Description;
         topic.ImageUrl = request.ImageUrl;
-        topic.Slug = request.Slug;
+        topic.Slug = request.Slug.Trim().ToLowerInvariant();
         topic.Position = request.Position;
-        topic.Status = request.Status;
-
         topic.UpdatedBy = _currentUser.UserId;
         topic.UpdatedAt = DateTime.UtcNow;
 

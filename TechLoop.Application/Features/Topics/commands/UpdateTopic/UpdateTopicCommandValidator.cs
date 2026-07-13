@@ -29,8 +29,5 @@ public sealed class UpdateTopicCommandValidator
 
         RuleFor(x => x.Position)
             .GreaterThanOrEqualTo(0);
-
-        RuleFor(x => x.Status)
-            .IsInEnum();
     }
 }

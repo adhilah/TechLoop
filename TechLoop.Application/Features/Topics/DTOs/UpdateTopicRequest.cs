@@ -11,5 +11,4 @@ public class UpdateTopicRequest
     public string Description { get; set; } = string.Empty;
     public string? ImageUrl { get; set; } = string.Empty;
     public int Position { get; set; }
-    public ContentStatus  Status { get; set; } 
 }

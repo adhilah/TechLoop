@@ -2,6 +2,6 @@
 
 public enum QuestionType
 {
-    MCQ = 1,
-    Coding = 2
+    mcq = 1,
+    coding = 2
 }

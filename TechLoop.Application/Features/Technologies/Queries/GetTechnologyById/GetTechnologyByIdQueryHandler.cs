@@ -28,7 +28,7 @@ public sealed class GetTechnologyByIdQueryHandler
         if (technology is null)
             throw new NotFoundException("Technology not found.");
 
-        return new TechnologyResponse()
+        return new TechnologyResponse
         {
             Id = technology.Id,
             CategoryId = technology.CategoryId,
@@ -37,7 +37,15 @@ public sealed class GetTechnologyByIdQueryHandler
             Description = technology.Description,
             ImageUrl = technology.ImageUrl,
             Position = technology.Position,
-            Status = technology.Status
+            Status = technology.Status,
+            PublishedAt = technology.PublishedAt,
+            PublishedBy = technology.PublishedBy,
+            CreatedAt = technology.CreatedAt,
+            CreatedBy = technology.CreatedBy,
+            UpdatedAt = technology.UpdatedAt,
+            UpdatedBy = technology.UpdatedBy,
+            DeletedAt = technology.DeletedAt,
+            DeletedBy = technology.DeletedBy
         };
     }
 }

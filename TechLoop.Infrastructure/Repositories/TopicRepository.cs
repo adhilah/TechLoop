@@ -33,7 +33,45 @@ SELECT EXISTS
                 new { Title = title },
                 cancellationToken: cancellationToken));
     }
+
+    //SlugExists
+    public async Task<bool> SlugExistsAsync(string slug, CancellationToken cancellationToken)
+    {
+        const string sql = @"
+SELECT EXISTS
+(
+    SELECT 1
+    FROM topics
+    WHERE LOWER(slug) = LOWER(@Slug)
+    AND deleted_at IS NULL
+);";
+        using var connection = _context.CreateConnection();
+        return await connection.ExecuteScalarAsync<bool>(
+            new CommandDefinition(
+                sql,
+                new { Slug = slug },
+                cancellationToken: cancellationToken));
+    }
     
+    
+    //PositionExists
+    public async Task<bool> PositionExistsAsync(int position, CancellationToken cancellationToken)
+    {
+        const string sql = @"
+SELECT EXISTS
+(
+    SELECT 1
+    FROM topics
+    WHERE position = @Position
+    AND deleted_at IS NULL
+);";
+        using var connection = _context.CreateConnection();
+        return await connection.ExecuteScalarAsync<bool>(
+            new CommandDefinition(
+                sql,
+                new { Position = position },
+                cancellationToken: cancellationToken));
+    }
     //TechnologyExistsAsync
     public async Task<bool> TechnologyExistsAsync(int technologyId, CancellationToken cancellationToken)
     {
@@ -114,7 +152,6 @@ SET
     description = @Description,
     image_url = @ImageUrl,
     position = @Position,
-    status = @Status,
     updated_by = @UpdatedBy,
     updated_at = @UpdatedAt
 WHERE id = @Id
@@ -131,7 +168,6 @@ AND deleted_at IS NULL;
             topic.Slug,
             topic.ImageUrl,
             topic.Position,
-            topic.Status,
             topic.UpdatedBy,
             topic.UpdatedAt
 

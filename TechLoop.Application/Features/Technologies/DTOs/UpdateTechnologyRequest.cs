@@ -1,4 +1,5 @@
-﻿namespace TechLoop.Application.Features.Technologies.DTOs;
+﻿using TechLoop.Domain.Enums;
+namespace TechLoop.Application.Features.Technologies.DTOs;
 
 public sealed class UpdateTechnologyRequest
 {

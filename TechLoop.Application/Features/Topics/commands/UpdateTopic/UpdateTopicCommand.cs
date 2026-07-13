@@ -11,7 +11,6 @@ public sealed record UpdatedTopicCommand(
     string Description,
     string? ImageUrl,
     string Slug,
-    int Position,
-    ContentStatus Status
+    int Position
     ):IRequest<UpdateTopicResponse>;
 

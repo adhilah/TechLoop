@@ -1,5 +1,6 @@
 ﻿using TechLoop.Application.Features.Technologies.DTOs;
 using MediatR;
+using TechLoop.Domain.Enums;
 
 namespace TechLoop.Application.Features.Technologies.Commands.UpdateTechnology;
 

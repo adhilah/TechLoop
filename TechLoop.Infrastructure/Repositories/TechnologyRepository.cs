@@ -40,6 +40,47 @@ SELECT EXISTS
                 cancellationToken: cancellationToken));
     }
     
+    //SlugExists
+    public async Task<bool> SlugExistsAsync(string slug, CancellationToken cancellationToken)
+    {
+        const string sql = @"
+SELECT EXISTS
+(
+    SELECT 1
+    FROM technologies
+    WHERE LOWER(slug) = LOWER(@Slug)
+    AND deleted_at IS NULL
+);";
+        using var connection = _context.CreateConnection();
+        return await connection.ExecuteScalarAsync<bool>(
+            new CommandDefinition(
+                sql,
+                new { Slug = slug },
+                cancellationToken: cancellationToken));
+    }
+    
+    
+    //PositionExists
+    public async Task<bool> PositionExistsAsync(int position, CancellationToken cancellationToken)
+    {
+        const string sql = @"
+SELECT EXISTS
+(
+    SELECT 1
+    FROM technologies
+    WHERE position = @Position
+    AND deleted_at IS NULL
+);";
+        using var connection = _context.CreateConnection();
+        return await connection.ExecuteScalarAsync<bool>(
+            new CommandDefinition(
+                sql,
+                new { Position = position },
+                cancellationToken: cancellationToken));
+    }
+    
+    
+    
     //CategoryExistsAsync
     public async Task<bool> CategoryExistsAsync(
         int categoryId,
@@ -77,9 +118,7 @@ INSERT INTO technologies
     published_at,
     published_by,
     created_by,
-    created_at,
-    updated_at,
-    updated_by
+    created_at
 )
 VALUES
 (
@@ -93,9 +132,7 @@ VALUES
     @PublishedAt,
     @PublishedBy,
     @CreatedBy,
-    @CreatedAt,
-    @UpdatedAt,
-    @UpdatedBy
+    @CreatedAt
 )
 RETURNING id;
 ";
@@ -235,7 +272,4 @@ ORDER BY position;";
                 sql,
                 cancellationToken: cancellationToken));
     }
-    
-    
-    
 }

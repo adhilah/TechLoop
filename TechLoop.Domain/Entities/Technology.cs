@@ -1,4 +1,6 @@
-﻿namespace TechLoop.Domain.Entities;
+﻿using TechLoop.Domain.Enums;
+
+namespace TechLoop.Domain.Entities;
 public class Technology
 {
     public int Id { get; set; }
@@ -9,7 +11,7 @@ public class Technology
     public string ImageUrl { get; set; } = string.Empty;
     public int Position { get; set; }
     
-    public string Status { get; set; } = "Draft";
+    public ContentStatus Status { get; set; }
 
     public DateTime? PublishedAt { get; set; }
 

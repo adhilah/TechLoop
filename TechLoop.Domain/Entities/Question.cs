@@ -9,15 +9,15 @@ public class Question
     public string Slug { get; set; } = string.Empty;
     public string Title { get; set; } = string.Empty;
     public string Description { get; set; } = string.Empty;
-    public string ImageUrl { get; set; } = string.Empty;
+    public string? ImageUrl { get; set; } = string.Empty;
     public int Mark { get; set; } = 0;
     public string Hint { get; set; } = string.Empty;
     public string Explanation { get; set; } = string.Empty;
-    public int TimeLimitSeconds { get; set; } = 0;
-    public int MemoryLimitMb { get; set; } = 0;
-    public string Difficulty { get; set; } = string.Empty;
+    public int? TimeLimitSeconds { get; set; } = 0;
+    public int? MemoryLimitMb { get; set; } = 0;
+    public DifficultyLevel Difficulty { get; set; }
     public int Position { get; set; }
-    public string Status { get; set; } = "Draft";
+    public ContentStatus Status { get; set; }
     public DateTime? PublishedAt { get; set; }
     public Guid? PublishedBy { get; set; }
     public DateTime CreatedAt { get; set; }
