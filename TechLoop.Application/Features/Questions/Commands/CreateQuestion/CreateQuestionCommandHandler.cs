@@ -54,9 +54,6 @@ public sealed class CreateQuestionCommandHandler : IRequestHandler<CreateQuestio
             MemoryLimitMb = request.MemoryLimitMb,
             Difficulty = request.Difficulty,
             Position = request.Position,
-            Status = request.Status,
-            PublishedAt = request.Status == ContentStatus.Published ? DateTime.UtcNow : null,
-            PublishedBy = request.Status == ContentStatus.Published ? _currentUserService.UserId : null,
             CreatedAt = DateTime.UtcNow,
             CreatedBy = _currentUserService.UserId
         };

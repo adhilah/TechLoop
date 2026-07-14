@@ -17,6 +17,5 @@ public sealed record CreateQuestionCommand(
     int? TimeLimitSeconds,
     int? MemoryLimitMb,
     DifficultyLevel Difficulty,
-    int Position,
-    ContentStatus Status
+    int Position
 ) : IRequest<CreateQuestionResponse>;

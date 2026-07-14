@@ -55,9 +55,6 @@ public sealed class CreateTopicCommandHandler : IRequestHandler<CreateTopicComma
             Description = request.Description ?? string.Empty,
             ImageUrl = request.ImageUrl ?? string.Empty,
             Position = request.Position,
-            Status = request.Status,
-            PublishedAt = request.Status == ContentStatus.Published ? DateTime.UtcNow : null,
-            PublishedBy = request.Status == ContentStatus.Published ? _currentUser.UserId : null,
             CreatedAt = DateTime.UtcNow,
             CreatedBy = _currentUser.UserId
         };

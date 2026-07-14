@@ -27,7 +27,6 @@ public sealed class GetAllTechnologiesQueryHandler : IRequestHandler<GetAllTechn
                 Description = x.Description,
                 ImageUrl = x.ImageUrl,
                 Position = x.Position,
-                Status = x.Status,
                 PublishedAt = x.PublishedAt,
                 PublishedBy = x.PublishedBy,
                 CreatedAt = x.CreatedAt,

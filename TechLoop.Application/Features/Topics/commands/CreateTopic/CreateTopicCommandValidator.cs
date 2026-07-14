@@ -28,8 +28,6 @@ public sealed class CreateTopicCommandValidator
         RuleFor(x => x.Position)
             .GreaterThanOrEqualTo(0);
 
-        RuleFor(x => x.Status)
-            .Must(x => x == ContentStatus.Draft || x == ContentStatus.Published)
-            .WithMessage("Status must be Draft or Published.");
+
     }
 }

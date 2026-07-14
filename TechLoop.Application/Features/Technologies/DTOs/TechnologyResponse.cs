@@ -11,17 +11,12 @@ public sealed class TechnologyResponse
     public string? Description { get; set; }
     public string? ImageUrl { get; set; }
     public int Position { get; set; }
-    public ContentStatus Status { get; set; }
-
     public DateTime? PublishedAt { get; set; }
     public Guid? PublishedBy { get; set; }
-
     public DateTime CreatedAt { get; set; }
     public Guid? CreatedBy { get; set; }
-
     public DateTime? UpdatedAt { get; set; }
     public Guid? UpdatedBy { get; set; }
-
     public DateTime? DeletedAt { get; set; }
     public Guid? DeletedBy { get; set; }
 }

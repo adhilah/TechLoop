@@ -37,7 +37,6 @@ public sealed class GetTechnologyByIdQueryHandler
             Description = technology.Description,
             ImageUrl = technology.ImageUrl,
             Position = technology.Position,
-            Status = technology.Status,
             PublishedAt = technology.PublishedAt,
             PublishedBy = technology.PublishedBy,
             CreatedAt = technology.CreatedAt,

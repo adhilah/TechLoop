@@ -10,9 +10,6 @@ public class Technology
     public string Description { get; set; } = string.Empty;
     public string ImageUrl { get; set; } = string.Empty;
     public int Position { get; set; }
-    
-    public ContentStatus Status { get; set; }
-
     public DateTime? PublishedAt { get; set; }
 
     public Guid? PublishedBy { get; set; }

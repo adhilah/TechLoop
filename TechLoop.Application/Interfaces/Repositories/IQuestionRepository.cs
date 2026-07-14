@@ -23,4 +23,5 @@ public interface IQuestionRepository
     Task<bool> PositionExistsAsync(int subTopicId, int position, CancellationToken cancellationToken);
 
     Task<bool> SubTopicExistsAsync(int subTopicId, CancellationToken cancellationToken);
+    Task<int> PublishAsync(Question question, CancellationToken cancellationToken);
 }

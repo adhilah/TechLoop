@@ -54,9 +54,6 @@ public sealed class CreateSubTopicCommandHandler : IRequestHandler<CreateSubTopi
             Description = request.Description ?? string.Empty,
             ImageUrl = request.ImageUrl ?? string.Empty,
             Position = request.Position,
-            Status = request.Status,
-            PublishedAt = request.Status == ContentStatus.Published ? DateTime.UtcNow : null,
-            PublishedBy = request.Status == ContentStatus.Published ? _currentUserService.UserId : null,
             CreatedBy = _currentUserService.UserId,
             CreatedAt = DateTime.UtcNow,
 

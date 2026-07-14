@@ -17,9 +17,6 @@ public sealed class TopicResponse
     public string? ImageUrl { get; set; }
 
     public int Position { get; set; }
-
-    public ContentStatus Status { get; set; }
-
     public DateTime? PublishedAt { get; set; }
 
     public Guid? PublishedBy { get; set; }

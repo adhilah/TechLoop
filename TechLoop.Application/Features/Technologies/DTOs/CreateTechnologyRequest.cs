@@ -10,5 +10,5 @@ public sealed class CreateTechnologyRequest
     public string? Slug { get; set; }
     public string? ImageUrl { get; set; }
     public int Position { get; set; }
-    public ContentStatus Status { get; set; }
+
 }

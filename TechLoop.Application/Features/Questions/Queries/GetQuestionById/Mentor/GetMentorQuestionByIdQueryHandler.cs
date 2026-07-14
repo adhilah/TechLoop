@@ -38,7 +38,6 @@ public sealed class GetMentorQuestionByIdQueryHandler : IRequestHandler<GetMento
             MemoryLimitMb = question.MemoryLimitMb,
             Difficulty = question.Difficulty,
             Position = question.Position,
-            Status = question.Status,
             PublishedAt = question.PublishedAt,
             PublishedBy = question.PublishedBy,
             CreatedAt = question.CreatedAt,

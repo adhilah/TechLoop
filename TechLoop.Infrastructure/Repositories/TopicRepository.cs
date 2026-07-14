@@ -263,4 +263,19 @@ AND deleted_at IS NULL;
                 },
                 cancellationToken: cancellationToken));
     }
+    
+    //update publish
+    public async Task<int> PublishAsync(Topic topic, CancellationToken cancellationToken)
+    {
+        const string sql = @"
+UPDATE topics
+SET
+    published_at = @PublishedAt,
+    published_by = @PublishedBy
+WHERE id = @Id
+AND deleted_at IS NULL;";
+
+        using var connection = _context.CreateConnection();
+        return await connection.ExecuteAsync(new CommandDefinition(sql, topic, cancellationToken: cancellationToken));
+    }
 }

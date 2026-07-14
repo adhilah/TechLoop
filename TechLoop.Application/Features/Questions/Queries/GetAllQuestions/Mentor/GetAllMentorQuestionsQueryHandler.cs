@@ -32,7 +32,6 @@ public sealed class GetAllMentorQuestionsQueryHandler : IRequestHandler<GetAllMe
             MemoryLimitMb = question.MemoryLimitMb,
             Difficulty = question.Difficulty,
             Position = question.Position,
-            Status = question.Status,
             PublishedAt = question.PublishedAt,
             PublishedBy = question.PublishedBy,
             CreatedAt = question.CreatedAt,

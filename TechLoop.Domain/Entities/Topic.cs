@@ -10,7 +10,6 @@ public class Topic
     public string Description { get; set; } = string.Empty;
     public string? ImageUrl { get; set; } = string.Empty;
     public int Position { get; set; }
-    public ContentStatus Status { get; set; }  = ContentStatus.Draft;
     public DateTime? PublishedAt { get; set; }
     public Guid? PublishedBy { get; set; }
     public DateTime CreatedAt { get; set; }

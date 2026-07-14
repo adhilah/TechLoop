@@ -13,4 +13,5 @@ public interface ISubTopicsRepository
     Task<SubTopic?> GetByIdAsync(int id, CancellationToken cancellationToken);
     Task<IEnumerable<SubTopic>> GetAllAsync(CancellationToken cancellationToken);
     Task<bool> TopicExistsAsync(int topicId, CancellationToken cancellationToken);
+    Task<int> PublishAsync(SubTopic subTopic, CancellationToken cancellationToken);
 }

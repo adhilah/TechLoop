@@ -14,4 +14,5 @@ public interface ITopicsRepository
     Task<int> SoftDeleteAsync(int id, Guid deletedBy, CancellationToken cancellationToken);
     Task<IEnumerable<Topic>> GetAllAsync(CancellationToken cancellationToken);
     Task<Topic?> GetByIdAsync(int id, CancellationToken cancellationToken);
+    Task<int> PublishAsync(Topic topic, CancellationToken cancellationToken);
 }

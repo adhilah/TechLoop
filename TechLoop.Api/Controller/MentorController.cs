@@ -18,9 +18,14 @@ using TechLoop.Application.DTOs.Questions.Requests;
 using TechLoop.Application.Features.Questions.Commands.CreateQuestion;
 using TechLoop.Application.Features.Questions.Commands.UpdateQuestion;
 using TechLoop.Application.Features.Questions.Commands.DeleteQuestion;
+using TechLoop.Application.Features.Questions.Commands.PublishQuestion;
 using TechLoop.Application.Features.Questions.DTOs;
 using TechLoop.Application.Features.Questions.Queries.GetAllMentorQuestions;
 using TechLoop.Application.Features.Questions.Queries.GetMentorQuestionById;
+using TechLoop.Application.Features.SubTopics.Commands.PublishSubTopic;
+using TechLoop.Application.Features.Technologies.Commands.PublishTechnology;
+using TechLoop.Application.Features.Topics.Commands.PublishTopic;
+
 //using System.Security.Claims;
 
 namespace TechLoop.Api.Controllers;
@@ -49,11 +54,19 @@ public sealed class MentorController : ControllerBase
             request.Description,
             request.Slug,
             request.ImageUrl,
-            request.Position,
-            request.Status);
+            request.Position);
 
         var result = await _mediator.Send(command, cancellationToken);
 
+        return Ok(result);
+    }
+    
+    
+    //update publish
+    [HttpPatch("technologies/{id:int}/publish")]
+    public async Task<ActionResult<PublishTechnologyResponse>> PublishTechnology(int id, CancellationToken cancellationToken)
+    {
+        var result = await _mediator.Send(new PublishTechnologyCommand(id), cancellationToken);
         return Ok(result);
     }
 
@@ -105,6 +118,14 @@ public sealed class MentorController : ControllerBase
         return Ok(result);
     }
     
+    // update publish
+    [HttpPatch("topics/{id:int}/publish")]
+    public async Task<ActionResult<PublishTopicResponse>> PublishTopic(int id, CancellationToken cancellationToken)
+    {
+        var result = await _mediator.Send(new PublishTopicCommand(id), cancellationToken);
+        return Ok(result);
+    }
+    
     //Update Topic
     [HttpPut("topics/{id:int}")]
     public async Task<ActionResult<UpdateTopicResponse>> UpdateTopic(int id,
@@ -149,11 +170,18 @@ public sealed class MentorController : ControllerBase
             request.Description,
             request.ImageUrl,
             request.Slug,
-            request.Position,
-            request.Status);
+            request.Position);
 
         var result = await _mediator.Send(command, cancellationToken);
 
+        return Ok(result);
+    }
+    
+    // update publish
+    [HttpPatch("subtopics/{id:int}/publish")]
+    public async Task<ActionResult<PublishSubTopicResponse>> PublishSubTopic(int id, CancellationToken cancellationToken)
+    {
+        var result = await _mediator.Send(new PublishSubTopicCommand(id), cancellationToken);
         return Ok(result);
     }
     
@@ -202,10 +230,17 @@ public sealed class MentorController : ControllerBase
             request.TimeLimitSeconds,
             request.MemoryLimitMb,
             request.Difficulty,
-            request.Position,
-            request.Status);
+            request.Position);
 
         var result = await _mediator.Send(command, cancellationToken);
+        return Ok(result);
+    }
+    
+    // update publish
+    [HttpPatch("questions/{id:int}/publish")]
+    public async Task<ActionResult<PublishQuestionResponse>> PublishQuestion(int id, CancellationToken cancellationToken)
+    {
+        var result = await _mediator.Send(new PublishQuestionCommand(id), cancellationToken);
         return Ok(result);
     }
 
@@ -259,3 +294,5 @@ public sealed class MentorController : ControllerBase
         var result = await _mediator.Send(new GetMentorQuestionByIdQuery(id), cancellationToken);
         return Ok(result);
     }}
+    
+    

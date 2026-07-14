@@ -10,6 +10,5 @@ public sealed record CreateTechnologyCommand(
     string? Description,
     string? Slug,
     string? ImageUrl,
-    int Position,
-    ContentStatus Status
+    int Position
 ) : IRequest<CreateTechnologyResponse>;

@@ -34,9 +34,6 @@ public sealed class CreateQuestionCommandValidator : AbstractValidator<CreateQue
 
         RuleFor(x => x.Difficulty)
             .IsInEnum();
-
-        RuleFor(x => x.Status)
-            .IsInEnum();
         
         When(x => x.QuestionType == QuestionType.coding, () =>
         {

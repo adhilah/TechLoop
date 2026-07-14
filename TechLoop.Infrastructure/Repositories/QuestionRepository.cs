@@ -333,4 +333,18 @@ AND deleted_at IS NULL;";
                 new { Id = id },
                 cancellationToken: cancellationToken));
     }
+    
+    public async Task<int> PublishAsync(Question question, CancellationToken cancellationToken)
+    {
+        const string sql = @"
+UPDATE questions
+SET
+    published_at = @PublishedAt,
+    published_by = @PublishedBy
+WHERE id = @Id
+AND deleted_at IS NULL;";
+
+        using var connection = _context.CreateConnection();
+        return await connection.ExecuteAsync(new CommandDefinition(sql, question, cancellationToken: cancellationToken));
+    }
 }

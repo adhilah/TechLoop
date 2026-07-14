@@ -18,7 +18,6 @@ public sealed class MentorQuestionResponse
     public int? MemoryLimitMb { get; set; }
     public DifficultyLevel Difficulty { get; set; }
     public int Position { get; set; }
-    public ContentStatus Status { get; set; }
     public DateTime? PublishedAt { get; set; }
     public Guid? PublishedBy { get; set; }
     public DateTime CreatedAt { get; set; }

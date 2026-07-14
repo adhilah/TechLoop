@@ -17,4 +17,5 @@ public interface ITechnologyRepository
     
     Task<IEnumerable<Technology>> GetAllAsync(CancellationToken cancellationToken);
     Task<Technology?> GetByIdAsync(int id, CancellationToken cancellationToken);
+    Task<int> PublishAsync(Technology technology, CancellationToken cancellationToken);
 }

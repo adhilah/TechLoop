@@ -17,5 +17,4 @@ public class CreateQuestionRequest
     public int? MemoryLimitMb { get; set; }
     public DifficultyLevel Difficulty { get; set; }
     public int Position { get; set; }
-    public ContentStatus Status { get; set; }
 }

@@ -37,7 +37,6 @@ public sealed class GetTopicByIdQueryHandler
             Description = topic.Description,
             ImageUrl = topic.ImageUrl,
             Position = topic.Position,
-            Status = topic.Status,
             PublishedAt = topic.PublishedAt,
             PublishedBy = topic.PublishedBy,
             CreatedAt = topic.CreatedAt,

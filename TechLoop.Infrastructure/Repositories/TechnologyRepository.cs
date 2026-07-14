@@ -272,4 +272,18 @@ ORDER BY position;";
                 sql,
                 cancellationToken: cancellationToken));
     }
+    
+    public async Task<int> PublishAsync(Technology technology, CancellationToken cancellationToken)
+    {
+        const string sql = @"
+UPDATE technologies
+SET
+    published_at = @PublishedAt,
+    published_by = @PublishedBy
+WHERE id = @Id
+AND deleted_at IS NULL;";
+
+        using var connection = _context.CreateConnection();
+        return await connection.ExecuteAsync(new CommandDefinition(sql, technology, cancellationToken: cancellationToken));
+    }
 }

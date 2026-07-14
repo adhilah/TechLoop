@@ -17,7 +17,6 @@ public class Question
     public int? MemoryLimitMb { get; set; } = 0;
     public DifficultyLevel Difficulty { get; set; }
     public int Position { get; set; }
-    public ContentStatus Status { get; set; }
     public DateTime? PublishedAt { get; set; }
     public Guid? PublishedBy { get; set; }
     public DateTime CreatedAt { get; set; }

@@ -243,4 +243,20 @@ ORDER BY position;
         return await connection.QueryAsync<SubTopic>(
             new CommandDefinition(sql, cancellationToken: cancellationToken));
     }
+    
+    
+    //update publish
+    public async Task<int> PublishAsync(SubTopic subTopic, CancellationToken cancellationToken)
+    {
+        const string sql = @"
+UPDATE sub_topics
+SET
+    published_at = @PublishedAt,
+    published_by = @PublishedBy
+WHERE id = @Id
+AND deleted_at IS NULL;";
+
+        using var connection = _context.CreateConnection();
+        return await connection.ExecuteAsync(new CommandDefinition(sql, subTopic, cancellationToken: cancellationToken));
+    }
 }
