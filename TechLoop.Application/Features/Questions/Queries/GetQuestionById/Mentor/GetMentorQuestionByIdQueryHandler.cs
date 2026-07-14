@@ -3,26 +3,33 @@ using TechLoop.Application.Common.Exceptions;
 using TechLoop.Application.Features.Questions.DTOs;
 using TechLoop.Application.Interfaces.Repositories;
 
-namespace TechLoop.Application.Features.Questions.Queries.GetMentorQuestionById;
+namespace TechLoop.Application.Features.Questions.Queries.GetQuestionById.Mentor;
 
-public sealed class GetMentorQuestionByIdQueryHandler : IRequestHandler<GetMentorQuestionByIdQuery, MentorQuestionResponse>
+public sealed class GetMentorQuestionByIdQueryHandler
+    : IRequestHandler<GetMentorQuestionByIdQuery, MentorQuestionResponse>
 {
     private readonly IQuestionRepository _repository;
 
-    public GetMentorQuestionByIdQueryHandler(IQuestionRepository repository)
+    public GetMentorQuestionByIdQueryHandler(
+        IQuestionRepository repository)
     {
         _repository = repository;
     }
 
-    public async Task<MentorQuestionResponse> Handle(GetMentorQuestionByIdQuery request, CancellationToken cancellationToken)
+    public async Task<MentorQuestionResponse> Handle(
+        GetMentorQuestionByIdQuery request,
+        CancellationToken cancellationToken)
     {
-        var question = await _repository.GetByIdAsync(request.Id, cancellationToken);
+        var question = await _repository.GetByIdAsync(
+            request.Id,
+            cancellationToken);
+
         if (question is null)
         {
             throw new NotFoundException("Question not found.");
         }
 
-        return new MentorQuestionResponse()
+        return new MentorQuestionResponse
         {
             Id = question.Id,
             SubTopicId = question.SubTopicId,

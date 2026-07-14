@@ -32,9 +32,6 @@ INSERT INTO questions
     memory_limit_mb,
     difficulty,
     position,
-    status,
-    published_at,
-    published_by,
     created_at,
     created_by
 )
@@ -53,9 +50,6 @@ VALUES
     @MemoryLimitMb,
     @Difficulty,
     @Position,
-    @Status,
-    @PublishedAt,
-    @PublishedBy,
     @CreatedAt,
     @CreatedBy
 )
@@ -94,10 +88,7 @@ AND deleted_at IS NULL;";
 
         using var connection = _context.CreateConnection();
         return await connection.ExecuteAsync(
-            new CommandDefinition(
-                sql,
-                question,
-                cancellationToken: cancellationToken));
+            new CommandDefinition(sql, question, cancellationToken: cancellationToken));
     }
 
     public async Task<int> SoftDeleteAsync(int id, Guid deletedBy, CancellationToken cancellationToken)
@@ -141,7 +132,6 @@ SELECT
     memory_limit_mb AS MemoryLimitMb,
     difficulty,
     position,
-    status,
     published_at AS PublishedAt,
     published_by AS PublishedBy,
     created_at AS CreatedAt,
@@ -180,7 +170,6 @@ SELECT
     memory_limit_mb AS MemoryLimitMb,
     difficulty,
     position,
-    status,
     published_at AS PublishedAt,
     published_by AS PublishedBy,
     created_at AS CreatedAt,
@@ -277,7 +266,6 @@ SELECT
     memory_limit_mb AS MemoryLimitMb,
     difficulty,
     position,
-    status,
     published_at AS PublishedAt,
     published_by AS PublishedBy,
     created_at AS CreatedAt,
@@ -285,8 +273,9 @@ SELECT
     updated_at AS UpdatedAt,
     updated_by AS UpdatedBy
 FROM questions
-WHERE deleted_at IS NULL
-AND status = 2
+WHERE
+    published_at IS NOT NULL
+AND deleted_at IS NULL
 ORDER BY position;";
 
         using var connection = _context.CreateConnection();
@@ -313,7 +302,6 @@ SELECT
     memory_limit_mb AS MemoryLimitMb,
     difficulty,
     position,
-    status,
     published_at AS PublishedAt,
     published_by AS PublishedBy,
     created_at AS CreatedAt,
@@ -321,8 +309,9 @@ SELECT
     updated_at AS UpdatedAt,
     updated_by AS UpdatedBy
 FROM questions
-WHERE id = @Id
-AND status = 2
+WHERE
+    id = @Id
+AND published_at IS NOT NULL
 AND deleted_at IS NULL;";
 
         using var connection = _context.CreateConnection();

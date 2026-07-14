@@ -2,21 +2,26 @@ using MediatR;
 using TechLoop.Application.Features.Questions.DTOs;
 using TechLoop.Application.Interfaces.Repositories;
 
-namespace TechLoop.Application.Features.Questions.Queries.GetAllMentorQuestions;
+namespace TechLoop.Application.Features.Questions.Queries.GetAllQuestions.Mentor;
 
-public sealed class GetAllMentorQuestionsQueryHandler : IRequestHandler<GetAllMentorQuestionsQuery, IEnumerable<MentorQuestionResponse>>
+public sealed class GetAllMentorQuestionsQueryHandler
+    : IRequestHandler<GetAllMentorQuestionsQuery, IEnumerable<MentorQuestionResponse>>
 {
     private readonly IQuestionRepository _repository;
 
-    public GetAllMentorQuestionsQueryHandler(IQuestionRepository repository)
+    public GetAllMentorQuestionsQueryHandler(
+        IQuestionRepository repository)
     {
         _repository = repository;
     }
 
-    public async Task<IEnumerable<MentorQuestionResponse>> Handle(GetAllMentorQuestionsQuery request, CancellationToken cancellationToken)
+    public async Task<IEnumerable<MentorQuestionResponse>> Handle(
+        GetAllMentorQuestionsQuery request,
+        CancellationToken cancellationToken)
     {
         var questions = await _repository.GetAllAsync(cancellationToken);
-        return questions.Select(question => new MentorQuestionResponse()
+
+        return questions.Select(question => new MentorQuestionResponse
         {
             Id = question.Id,
             SubTopicId = question.SubTopicId,

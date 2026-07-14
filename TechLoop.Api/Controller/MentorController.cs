@@ -20,8 +20,9 @@ using TechLoop.Application.Features.Questions.Commands.UpdateQuestion;
 using TechLoop.Application.Features.Questions.Commands.DeleteQuestion;
 using TechLoop.Application.Features.Questions.Commands.PublishQuestion;
 using TechLoop.Application.Features.Questions.DTOs;
-using TechLoop.Application.Features.Questions.Queries.GetAllMentorQuestions;
-using TechLoop.Application.Features.Questions.Queries.GetMentorQuestionById;
+using TechLoop.Application.Features.Questions.Queries.GetAllQuestions.Mentor;
+using TechLoop.Application.Features.Questions.Queries.GetAllQuestions.Mentor;
+using TechLoop.Application.Features.Questions.Queries.GetQuestionById.Mentor;
 using TechLoop.Application.Features.SubTopics.Commands.PublishSubTopic;
 using TechLoop.Application.Features.Technologies.Commands.PublishTechnology;
 using TechLoop.Application.Features.Topics.Commands.PublishTopic;
@@ -60,17 +61,18 @@ public sealed class MentorController : ControllerBase
 
         return Ok(result);
     }
-    
-    
+
+
     //update publish
     [HttpPatch("technologies/{id:int}/publish")]
-    public async Task<ActionResult<PublishTechnologyResponse>> PublishTechnology(int id, CancellationToken cancellationToken)
+    public async Task<ActionResult<PublishTechnologyResponse>> PublishTechnology(int id,
+        CancellationToken cancellationToken)
     {
         var result = await _mediator.Send(new PublishTechnologyCommand(id), cancellationToken);
         return Ok(result);
     }
 
-    
+
     //Update Technology
     [HttpPut("technologies/{id:int}")]
     public async Task<ActionResult<UpdateTechnologyResponse>> UpdateTechnology(
@@ -91,8 +93,8 @@ public sealed class MentorController : ControllerBase
 
         return Ok(result);
     }
-    
-    
+
+
     //Soft Delete Technology
     [HttpDelete("technologies/{id:int}")]
     public async Task<IActionResult> DeleteTechnology(
@@ -106,7 +108,7 @@ public sealed class MentorController : ControllerBase
         return Ok(result);
     }
 
-    
+
     // Create Topic
     [HttpPost("topics")]
     public async Task<ActionResult<CreateTopicResponse>> CreateTopic(
@@ -117,7 +119,7 @@ public sealed class MentorController : ControllerBase
 
         return Ok(result);
     }
-    
+
     // update publish
     [HttpPatch("topics/{id:int}/publish")]
     public async Task<ActionResult<PublishTopicResponse>> PublishTopic(int id, CancellationToken cancellationToken)
@@ -125,7 +127,7 @@ public sealed class MentorController : ControllerBase
         var result = await _mediator.Send(new PublishTopicCommand(id), cancellationToken);
         return Ok(result);
     }
-    
+
     //Update Topic
     [HttpPut("topics/{id:int}")]
     public async Task<ActionResult<UpdateTopicResponse>> UpdateTopic(int id,
@@ -145,7 +147,7 @@ public sealed class MentorController : ControllerBase
 
         return Ok(result);
     }
-    
+
     //Soft Delete Topic
     [HttpDelete("topics/{id:int}")]
     public async Task<ActionResult<DeleteTopicResponse>> DeleteTopic(
@@ -158,7 +160,7 @@ public sealed class MentorController : ControllerBase
 
         return Ok(result);
     }
-    
+
     //create subtop
     [HttpPost("subtopics")]
     public async Task<ActionResult<CreateSubTopicResponse>> CreateSubTopic(
@@ -176,15 +178,16 @@ public sealed class MentorController : ControllerBase
 
         return Ok(result);
     }
-    
+
     // update publish
     [HttpPatch("subtopics/{id:int}/publish")]
-    public async Task<ActionResult<PublishSubTopicResponse>> PublishSubTopic(int id, CancellationToken cancellationToken)
+    public async Task<ActionResult<PublishSubTopicResponse>> PublishSubTopic(int id,
+        CancellationToken cancellationToken)
     {
         var result = await _mediator.Send(new PublishSubTopicCommand(id), cancellationToken);
         return Ok(result);
     }
-    
+
     // Update Subtopic
     [HttpPut("subtopics/{id:int}")]
     public async Task<ActionResult<UpdateSubTopicResponse>> UpdateSubTopic(int id,
@@ -202,7 +205,7 @@ public sealed class MentorController : ControllerBase
         var result = await _mediator.Send(command, cancellationToken);
         return Ok(result);
     }
-    
+
     // Soft delete Subtopic
     [HttpDelete("subtopics/{id:int}")]
     public async Task<ActionResult<DeleteSubTopicResponse>> DeleteSubTopic(int id, CancellationToken cancellationToken)
@@ -211,7 +214,7 @@ public sealed class MentorController : ControllerBase
         var result = await _mediator.Send(command, cancellationToken);
         return Ok(result);
     }
-    
+
     // Create Question
     [HttpPost("questions")]
     public async Task<ActionResult<CreateQuestionResponse>> CreateQuestion(
@@ -235,10 +238,11 @@ public sealed class MentorController : ControllerBase
         var result = await _mediator.Send(command, cancellationToken);
         return Ok(result);
     }
-    
+
     // update publish
     [HttpPatch("questions/{id:int}/publish")]
-    public async Task<ActionResult<PublishQuestionResponse>> PublishQuestion(int id, CancellationToken cancellationToken)
+    public async Task<ActionResult<PublishQuestionResponse>> PublishQuestion(int id,
+        CancellationToken cancellationToken)
     {
         var result = await _mediator.Send(new PublishQuestionCommand(id), cancellationToken);
         return Ok(result);
@@ -278,21 +282,26 @@ public sealed class MentorController : ControllerBase
         var result = await _mediator.Send(command, cancellationToken);
         return Ok(result);
     }
-    
+
     // Get all questions
     [HttpGet("questions")]
-    public async Task<ActionResult<IEnumerable<MentorQuestionResponse>>> GetAllQuestions(CancellationToken cancellationToken)
+    public async Task<ActionResult<IEnumerable<MentorQuestionResponse>>> GetAllQuestions(
+        CancellationToken cancellationToken)
     {
-        var result = await _mediator.Send(new GetAllMentorQuestionsQuery(), cancellationToken);
+        var result = await _mediator.Send(
+            new GetAllMentorQuestionsQuery(),
+            cancellationToken);
         return Ok(result);
-    } 
-    
-// Get question by id
+    }
+
+    // Get question by id
     [HttpGet("questions/{id:int}")]
     public async Task<ActionResult<MentorQuestionResponse>> GetQuestionById(int id, CancellationToken cancellationToken)
     {
-        var result = await _mediator.Send(new GetMentorQuestionByIdQuery(id), cancellationToken);
+        var result = await _mediator.Send(
+            new GetMentorQuestionByIdQuery(id),
+            cancellationToken);
+
         return Ok(result);
-    }}
-    
-    
+    }
+}
