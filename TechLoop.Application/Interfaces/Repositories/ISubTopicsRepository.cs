@@ -10,8 +10,12 @@ public interface ISubTopicsRepository
     Task<int> CreateAsync(SubTopic subTopic, CancellationToken cancellationToken);
     Task<int> UpdateAsync(SubTopic subTopic, CancellationToken cancellationToken);
     Task<int> SoftDeleteAsync(int id, Guid deletedBy, CancellationToken cancellationToken);
-    Task<SubTopic?> GetByIdAsync(int id, CancellationToken cancellationToken);
-    Task<IEnumerable<SubTopic>> GetAllAsync(CancellationToken cancellationToken);
     Task<bool> TopicExistsAsync(int topicId, CancellationToken cancellationToken);
     Task<int> PublishAsync(SubTopic subTopic, CancellationToken cancellationToken);
+    //Mentor
+    Task<SubTopic?> GetByIdAsync(int id, CancellationToken cancellationToken);
+    Task<IEnumerable<SubTopic>> GetAllAsync(CancellationToken cancellationToken);
+    //Learner
+    Task<IEnumerable<SubTopic>> GetPublishedAsync(CancellationToken cancellationToken);
+    Task<SubTopic?> GetPublishedByIdAsync(int id, CancellationToken cancellationToken);
 }

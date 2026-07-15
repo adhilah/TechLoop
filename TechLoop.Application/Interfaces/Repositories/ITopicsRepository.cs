@@ -12,7 +12,14 @@ public interface ITopicsRepository
     Task<int> CreateAsync(Topic topic, CancellationToken cancellationToken);
     Task<int> UpdateAsync(Topic topic, CancellationToken cancellationToken);
     Task<int> SoftDeleteAsync(int id, Guid deletedBy, CancellationToken cancellationToken);
+    Task<int> PublishAsync(Topic topic, CancellationToken cancellationToken);
+    
+    //Mentor
     Task<IEnumerable<Topic>> GetAllAsync(CancellationToken cancellationToken);
     Task<Topic?> GetByIdAsync(int id, CancellationToken cancellationToken);
-    Task<int> PublishAsync(Topic topic, CancellationToken cancellationToken);
+
+    
+    //Learner
+    Task<IEnumerable<Topic>> GetPublishedAsync(CancellationToken cancellationToken);
+    Task<Topic?> GetPublishedByIdAsync(int id, CancellationToken cancellationToken);
 }

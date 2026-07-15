@@ -42,9 +42,7 @@ public sealed class GetAllMentorQuestionsQueryHandler
             CreatedAt = question.CreatedAt,
             CreatedBy = question.CreatedBy,
             UpdatedAt = question.UpdatedAt,
-            UpdatedBy = question.UpdatedBy,
-            DeletedAt = question.DeletedAt,
-            DeletedBy = question.DeletedBy
+            UpdatedBy = question.UpdatedBy
         });
     }
 }

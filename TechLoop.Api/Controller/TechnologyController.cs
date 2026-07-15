@@ -1,9 +1,10 @@
-﻿using TechLoop.Application.Features.Technologies.DTOs;
-using MediatR;
-using Microsoft.AspNetCore.Authorization;
+﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using TechLoop.Application.Features.Technologies.Queries.GetTechnologyById;
-using TechLoop.Application.Features.Technologies.Queries.GetAllTechnologies;
+using TechLoop.Application.Features.Technologies.DTOs;
+using TechLoop.Application.Features.Technologies.Queries.GetAllTechnologies.Learner;
+using TechLoop.Application.Features.Technologies.Queries.GetTechnologyById.Learner;
+
+namespace TechLoop.Api.Controllers;
 
 [ApiController]
 [Route("technologies")]
@@ -17,18 +18,16 @@ public sealed class TechnologyController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<IActionResult> GetAll(CancellationToken cancellationToken)
+    public async Task<ActionResult<IEnumerable<LearnerTechnologyResponse>>> GetAll(CancellationToken cancellationToken)
     {
-        var result = await _mediator.Send(new GetAllTechnologiesQuery(), cancellationToken);
-
+        var result = await _mediator.Send(new GetAllLearnerTechnologiesQuery(), cancellationToken);
         return Ok(result);
     }
 
     [HttpGet("{id:int}")]
-    public async Task<IActionResult> GetById(int id, CancellationToken cancellationToken)
+    public async Task<ActionResult<LearnerTechnologyResponse>> GetById(int id, CancellationToken cancellationToken)
     {
-        var result = await _mediator.Send(new GetTechnologyByIdQuery(id), cancellationToken);
-
+        var result = await _mediator.Send(new GetLearnerTechnologyByIdQuery(id), cancellationToken);
         return Ok(result);
     }
 }

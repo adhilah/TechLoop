@@ -1,12 +1,10 @@
 ﻿using MediatR;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using TechLoop.Application.Features.Topics.DTOs;
-using TechLoop.Application.Features.Topics.Queries.GetAllTopics;
-using TechLoop.Application.Features.Topics.Queries.GetTopicById;
+using TechLoop.Application.Features.Topics.Queries.GetAllTopics.Learner;
+using TechLoop.Application.Features.Topics.Queries.GetTopicById.Learner;
 
 namespace TechLoop.Api.Controllers;
-
 
 [ApiController]
 [Route("topics")]
@@ -18,25 +16,29 @@ public sealed class TopicController : ControllerBase
     {
         _mediator = mediator;
     }
-    
-    //Get all topics
-    [AllowAnonymous]
-    [HttpGet("topics")]
-    public async Task<ActionResult<IEnumerable<TopicResponse>>> GetAllTopics(CancellationToken cancellationToken)
+
+    // GET /topics
+    [HttpGet]
+    public async Task<ActionResult<IEnumerable<LearnerTopicResponse>>> GetAllTopics(
+        CancellationToken cancellationToken)
     {
         var result = await _mediator.Send(
-            new GetAllTopicQuery(),
+            new GetAllLearnerTopicsQuery(),
             cancellationToken);
 
         return Ok(result);
     }
 
-    //get topic by id
-    [AllowAnonymous]
-    [HttpGet("topics/{id:int}")]
-    public async Task<ActionResult<TopicResponse>> GetTopicById(int id, CancellationToken cancellationToken)
+    // GET /topics/{id}
+    [HttpGet("{id:int}")]
+    public async Task<ActionResult<LearnerTopicResponse>> GetTopicById(
+        int id,
+        CancellationToken cancellationToken)
     {
-        var result = await _mediator.Send(new GetTopicByIdQuery(id), cancellationToken);
+        var result = await _mediator.Send(
+            new GetLearnerTopicByIdQuery(id),
+            cancellationToken);
+
         return Ok(result);
     }
 }

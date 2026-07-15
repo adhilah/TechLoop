@@ -114,6 +114,7 @@ AND deleted_at IS NULL;";
                 cancellationToken: cancellationToken));
     }
 
+    //get question by id (for mentor)
     public async Task<Question?> GetByIdAsync(int id, CancellationToken cancellationToken)
     {
         const string sql = @"
@@ -137,9 +138,7 @@ SELECT
     created_at AS CreatedAt,
     created_by AS CreatedBy,
     updated_at AS UpdatedAt,
-    updated_by AS UpdatedBy,
-    deleted_at AS DeletedAt,
-    deleted_by AS DeletedBy
+    updated_by AS UpdatedBy
 FROM questions
 WHERE id = @Id
 AND deleted_at IS NULL;";
@@ -151,7 +150,8 @@ AND deleted_at IS NULL;";
                 new { Id = id },
                 cancellationToken: cancellationToken));
     }
-
+    
+    //get all questions (for mentor)
     public async Task<IEnumerable<Question>> GetAllAsync(CancellationToken cancellationToken)
     {
         const string sql = @"
@@ -248,6 +248,7 @@ SELECT EXISTS
                 cancellationToken: cancellationToken));
     }
     
+    //get published all questions (for leaner)
     public async Task<IEnumerable<Question>> GetPublishedAsync(CancellationToken cancellationToken)
     {
         const string sql = @"
@@ -282,6 +283,8 @@ ORDER BY position;";
         return await connection.QueryAsync<Question>(new CommandDefinition(sql, cancellationToken: cancellationToken));
     }
     
+    
+    //get published quention by id(for leaner)
     public async Task<Question?> GetPublishedByIdAsync(
         int id,
         CancellationToken cancellationToken)

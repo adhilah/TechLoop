@@ -23,7 +23,7 @@ public sealed class CreateTopicCommandHandler : IRequestHandler<CreateTopicComma
 
     public async Task<CreateTopicResponse> Handle(CreateTopicCommand request, CancellationToken cancellationToken)
     {
-        var technology = await _repository.GetByIdAsync(request.TechnologyId, cancellationToken);
+        var technology = await _technologyRepository.GetByIdAsync(request.TechnologyId, cancellationToken);
         if (technology is null)
         {
             throw new NotFoundException("Technology not found.");
@@ -60,7 +60,6 @@ public sealed class CreateTopicCommandHandler : IRequestHandler<CreateTopicComma
         };
 
         var id = await _repository.CreateAsync(topic, cancellationToken);
-        
         var createdTopic = await _repository.GetByIdAsync(id, cancellationToken);
         if (createdTopic is null)
         {

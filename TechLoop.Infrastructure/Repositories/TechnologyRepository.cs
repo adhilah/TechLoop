@@ -8,16 +8,12 @@ namespace TechLoop.Infrastructure.Repositories;
 public sealed class TechnologyRepository : ITechnologyRepository
 {
     private readonly IDapperContext _context;
-
-    public TechnologyRepository(
-        IDapperContext context)
+    public TechnologyRepository(IDapperContext context)
     {
         _context = context;
     }
 
-    public async Task<bool> ExistsAsync(
-        string name,
-        CancellationToken cancellationToken)
+    public async Task<bool> ExistsAsync(string name, CancellationToken cancellationToken)
     {
         const string sql = @"
 SELECT EXISTS
@@ -27,11 +23,8 @@ SELECT EXISTS
     WHERE LOWER(name)=LOWER(@Name)
     AND deleted_at IS NULL
 );";
-        using var connection =
-            _context.CreateConnection();
-
-        return await connection.ExecuteScalarAsync<bool>(
-            new CommandDefinition(
+        using var connection = _context.CreateConnection();
+        return await connection.ExecuteScalarAsync<bool>(new CommandDefinition(
                 sql,
                 new
                 {
@@ -82,9 +75,7 @@ SELECT EXISTS
     
     
     //CategoryExistsAsync
-    public async Task<bool> CategoryExistsAsync(
-        int categoryId,
-        CancellationToken cancellationToken)
+    public async Task<bool> CategoryExistsAsync(int categoryId, CancellationToken cancellationToken)
     {
         const string sql = @"
 SELECT EXISTS
@@ -95,7 +86,6 @@ SELECT EXISTS
 );";
 
         using var connection = _context.CreateConnection();
-
         return await connection.ExecuteScalarAsync<bool>(
             new CommandDefinition(
                 sql,
@@ -114,9 +104,6 @@ INSERT INTO technologies
     description,
     image_url,
     position,
-    status,
-    published_at,
-    published_by,
     created_by,
     created_at
 )
@@ -128,24 +115,17 @@ VALUES
     @Description,
     @ImageUrl,
     @Position,
-    @Status,
-    @PublishedAt,
-    @PublishedBy,
     @CreatedBy,
     @CreatedAt
 )
 RETURNING id;
 ";
         using var connection = _context.CreateConnection();
-
         return await connection.ExecuteScalarAsync<int>(
-            new CommandDefinition(
-                sql,
-                technology,
-                cancellationToken: cancellationToken));
+            new CommandDefinition(sql, technology, cancellationToken: cancellationToken));
     }
 
-    //get technology by id
+    //get technology by id (for mentor)
     public async Task<Technology?> GetByIdAsync(int id, CancellationToken cancellationToken)
     {
         const string sql = @"
@@ -157,21 +137,17 @@ SELECT
     description,
     image_url        AS ImageUrl,
     position,
-    status,
     published_at     AS PublishedAt,
     published_by     AS PublishedBy,
     created_by       AS CreatedBy,
     created_at       AS CreatedAt,
     updated_at       AS UpdatedAt,
-    updated_by       AS UpdatedBy,
-    deleted_at       AS DeletedAt,
-    deleted_by       AS DeletedBy
+    updated_by       AS UpdatedBy
 FROM technologies
 WHERE id = @Id
 AND deleted_at IS NULL;
 ";
         using var connection = _context.CreateConnection();
-
         return await connection.QuerySingleOrDefaultAsync<Technology>(
             new CommandDefinition(
                 sql,
@@ -242,7 +218,7 @@ AND deleted_at IS NULL;";
         });
     }
     
-    //Get all technologies
+    //Get all technologies(for mentor)
     public async Task<IEnumerable<Technology>> GetAllAsync(CancellationToken cancellationToken)
     {
         const string sql = @"
@@ -254,7 +230,6 @@ SELECT
     description,
     image_url AS ImageUrl,
     position,
-    status,
     published_at AS PublishedAt,
     published_by AS PublishedBy,
     created_by AS CreatedBy,
@@ -285,5 +260,61 @@ AND deleted_at IS NULL;";
 
         using var connection = _context.CreateConnection();
         return await connection.ExecuteAsync(new CommandDefinition(sql, technology, cancellationToken: cancellationToken));
+    }
+    
+    
+    //get all published technology ( for Learner)
+    public async Task<IEnumerable<Technology>> GetPublishedAsync(
+    CancellationToken cancellationToken)
+    {
+        const string sql = @"
+SELECT
+    id,
+    name,
+    slug,
+    description,
+    image_url AS ImageUrl,
+    position
+FROM technologies
+WHERE
+    published_at IS NOT NULL
+AND deleted_at IS NULL
+ORDER BY position;";
+
+        using var connection = _context.CreateConnection();
+
+        return await connection.QueryAsync<Technology>(
+            new CommandDefinition(
+                sql,
+                cancellationToken: cancellationToken));
+    }
+    
+    
+    //Get published technology by id(for Learner)
+    public async Task<Technology?> GetPublishedByIdAsync(
+        int id,
+        CancellationToken cancellationToken)
+    {
+        const string sql = @"
+SELECT
+    id,
+    name,
+    slug,
+    description,
+    image_url AS ImageUrl,
+    position
+FROM technologies
+WHERE
+    id = @Id
+AND published_at IS NOT NULL
+AND deleted_at IS NULL;";
+
+        using var connection = _context.CreateConnection();
+
+        return await connection.QuerySingleOrDefaultAsync<Technology>(
+            new CommandDefinition(
+                sql,
+                new { Id = id },
+                cancellationToken: cancellationToken));
     }
 }

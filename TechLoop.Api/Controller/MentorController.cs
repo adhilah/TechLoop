@@ -26,7 +26,12 @@ using TechLoop.Application.Features.Questions.Queries.GetQuestionById.Mentor;
 using TechLoop.Application.Features.SubTopics.Commands.PublishSubTopic;
 using TechLoop.Application.Features.Technologies.Commands.PublishTechnology;
 using TechLoop.Application.Features.Topics.Commands.PublishTopic;
-
+using TechLoop.Application.Features.Technologies.DTOs;
+using TechLoop.Application.Features.Technologies.Queries.GetAllTechnologies.Mentor;
+using TechLoop.Application.Features.Technologies.Queries.GetTechnologyById.Mentor;
+using TechLoop.Application.Features.Topics.DTOs;
+using TechLoop.Application.Features.Topics.Queries.GetAllTopics.Mentor;
+using TechLoop.Application.Features.Topics.Queries.GetTopicById.Mentor;
 //using System.Security.Claims;
 
 namespace TechLoop.Api.Controllers;
@@ -107,6 +112,22 @@ public sealed class MentorController : ControllerBase
 
         return Ok(result);
     }
+    
+    // Get all technologies with all details
+    [HttpGet("technologies")]
+    public async Task<ActionResult<IEnumerable<MentorTechnologyResponse>>> GetAllTechnologies(CancellationToken cancellationToken)
+    {
+        var result = await _mediator.Send(new GetAllMentorTechnologiesQuery(), cancellationToken);
+        return Ok(result);
+    }
+    
+    // Get all details of  technology by Id
+    [HttpGet("technologies/{id:int}")]
+    public async Task<ActionResult<MentorTechnologyResponse>> GetTechnologyById(int id, CancellationToken cancellationToken)
+    {
+        var result = await _mediator.Send(new GetMentorTechnologyByIdQuery(id), cancellationToken);
+        return Ok(result);
+    }
 
 
     // Create Topic
@@ -116,7 +137,6 @@ public sealed class MentorController : ControllerBase
         CancellationToken cancellationToken)
     {
         var result = await _mediator.Send(command, cancellationToken);
-
         return Ok(result);
     }
 
@@ -160,7 +180,32 @@ public sealed class MentorController : ControllerBase
 
         return Ok(result);
     }
+    
+    //GET All Topics
+    [HttpGet("topics")]
+    public async Task<ActionResult<IEnumerable<MentorTopicResponse>>> GetAllTopics(
+        CancellationToken cancellationToken)
+    {
+        var result = await _mediator.Send(
+            new GetAllMentorTopicsQuery(),
+            cancellationToken);
 
+        return Ok(result);
+    }
+
+    //GET Topic By Id
+    [HttpGet("topics/{id:int}")]
+    public async Task<ActionResult<MentorTopicResponse>> GetTopicById(
+        int id,
+        CancellationToken cancellationToken)
+    {
+        var result = await _mediator.Send(
+            new GetMentorTopicByIdQuery(id),
+            cancellationToken);
+
+        return Ok(result);
+    }
+    
     //create subtop
     [HttpPost("subtopics")]
     public async Task<ActionResult<CreateSubTopicResponse>> CreateSubTopic(

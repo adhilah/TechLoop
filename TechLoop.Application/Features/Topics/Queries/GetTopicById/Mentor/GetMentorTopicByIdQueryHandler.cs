@@ -1,20 +1,28 @@
 ﻿using MediatR;
+using TechLoop.Application.Common.Exceptions;
 using TechLoop.Application.Features.Topics.DTOs;
 using TechLoop.Application.Interfaces.Repositories;
 
-namespace TechLoop.Application.Features.Topics.Queries.GetAllTopics;
+namespace TechLoop.Application.Features.Topics.Queries.GetTopicById.Mentor;
 
-public sealed class GetAllTopicQueryHandler : IRequestHandler<GetAllTopicQuery, IEnumerable<TopicResponse>>
+public sealed class GetMentorTopicByIdQueryHandler : IRequestHandler<GetMentorTopicByIdQuery, MentorTopicResponse>
 {
     private readonly ITopicsRepository _repository;
-    public GetAllTopicQueryHandler(ITopicsRepository repository)
+    public GetMentorTopicByIdQueryHandler(
+        ITopicsRepository repository)
     {
         _repository = repository;
     }
-    public async Task<IEnumerable<TopicResponse>> Handle(GetAllTopicQuery request, CancellationToken cancellationToken)
+
+    public async Task<MentorTopicResponse> Handle(GetMentorTopicByIdQuery request, CancellationToken cancellationToken)
     {
-        var topics = await _repository.GetAllAsync(cancellationToken);
-        return topics.Select(topic => new TopicResponse
+        var topic = await _repository.GetByIdAsync(request.Id, cancellationToken);
+        if (topic is null)
+        {
+            throw new NotFoundException("Topic not found.");
+        }
+
+        return new MentorTopicResponse
         {
             Id = topic.Id,
             TechnologyId = topic.TechnologyId,
@@ -29,6 +37,6 @@ public sealed class GetAllTopicQueryHandler : IRequestHandler<GetAllTopicQuery, 
             CreatedBy = topic.CreatedBy,
             UpdatedAt = topic.UpdatedAt,
             UpdatedBy = topic.UpdatedBy
-        });
+        };
     }
 }

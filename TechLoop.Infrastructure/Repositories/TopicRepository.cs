@@ -103,15 +103,8 @@ INSERT INTO topics
     description,
     image_url,
     position,
-    status,
-    published_at,
-    published_by,
     created_by,
-    created_at,
-    updated_at,
-    updated_by,
-    deleted_at,
-    deleted_by
+    created_at
 )
 VALUES
 (
@@ -121,15 +114,8 @@ VALUES
     @Description,
     @ImageUrl,
     @Position,
-    @Status,
-    @PublishedAt,
-    @PublishedBy,
     @CreatedBy,
-    @CreatedAt,
-    @UpdatedAt,
-    @UpdatedBy,
-    @DeletedAt,
-    @DeletedBy
+    @CreatedAt
 )
 RETURNING id;
 ";
@@ -197,8 +183,7 @@ AND deleted_at is null;
         });
     }
     
-    //Get all topics
-
+    //Get all topics(for mentor)
     public async Task<IEnumerable<Topic>> GetAllAsync( CancellationToken cancellationToken)
     {
         const string sql = @"
@@ -209,15 +194,12 @@ SELECT id,
         slug,
         image_url,
         position,
-        status,
         published_at AS PublishedAt,
         published_by AS PublishedBy,
         created_at AS CreatedAt,
         created_by AS CreatedBy,
         updated_at AS UpdatedAt,
-        updated_by as UpdatedBy,
-        deleted_at AS DeletedAt,
-        deleted_by AS DeletedBy
+        updated_by as UpdatedBy
 FROM topics
 WHERE deleted_at is null
 ORDER BY Position;
@@ -227,7 +209,7 @@ ORDER BY Position;
             new CommandDefinition(sql, cancellationToken: cancellationToken));
     }
     
-    //get topic by id
+    //get topic by id (for mentor)
 
     public async Task<Topic?> GetByIdAsync(int id, CancellationToken cancellationToken)
     {
@@ -240,15 +222,12 @@ SELECT
     slug,
     image_url,
     position,
-    status,
     published_at AS PublishedAt,
     published_by AS PublishedBy,
     created_at AS CreatedAt,
     created_by AS CreatedBy,
     updated_at AS UpdatedAt,
-    updated_by AS UpdatedBy,
-    deleted_at AS DeletedAt,
-    deleted_by AS DeletedBy
+    updated_by AS UpdatedBy
 FROM topics
 WHERE id = @Id
 AND deleted_at IS NULL;
@@ -277,5 +256,61 @@ AND deleted_at IS NULL;";
 
         using var connection = _context.CreateConnection();
         return await connection.ExecuteAsync(new CommandDefinition(sql, topic, cancellationToken: cancellationToken));
+    }
+    
+    //get published all topic (for learner)
+    public async Task<IEnumerable<Topic>> GetPublishedAsync(
+    CancellationToken cancellationToken)
+    {
+        const string sql = @"
+SELECT
+    id,
+    technology_id AS TechnologyId,
+    title,
+    slug,
+    description,
+    image_url AS ImageUrl,
+    position
+FROM topics
+WHERE
+    published_at IS NOT NULL
+AND deleted_at IS NULL
+ORDER BY position;";
+
+        using var connection = _context.CreateConnection();
+
+        return await connection.QueryAsync<Topic>(
+            new CommandDefinition(
+                sql,
+                cancellationToken: cancellationToken));
+    }
+   
+    //get published topic by id( for learner)
+    public async Task<Topic?> GetPublishedByIdAsync(
+        int id,
+        CancellationToken cancellationToken)
+    {
+        const string sql = @"
+SELECT
+    id,
+    technology_id AS TechnologyId,
+    title,
+    slug,
+    description,
+    image_url AS ImageUrl,
+    position
+FROM topics
+WHERE
+    id = @Id
+AND published_at IS NOT NULL
+AND deleted_at IS NULL;";
+
+        using var connection = _context.CreateConnection();
+
+        return await connection.QuerySingleOrDefaultAsync<Topic>(
+            new CommandDefinition(
+                sql,
+                new { Id = id },
+                cancellationToken: cancellationToken));
     }
 }
