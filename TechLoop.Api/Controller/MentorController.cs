@@ -38,8 +38,10 @@ using TechLoop.Application.Features.MCQ.Commands.UpdateMcqOption;
 using TechLoop.Application.Features.MCQ.DTOs;
 using System.Security.Claims;
 using TechLoop.Application.Features.Coding.Commands.CreateCodingTemplate;
+using TechLoop.Application.Features.Coding.Commands.CreateTestCase;
 using TechLoop.Application.Features.Coding.Commands.DeleteCodingTemplate;
 using TechLoop.Application.Features.Coding.Commands.UpdateCodingTemplate;
+using TechLoop.Application.Features.Coding.Commands.UpdateTestCase;
 using TechLoop.Application.Features.Coding.DTOs;
 using TechLoop.Application.Features.Coding.Queries.GetCodingTemplatesByQuestion.Mentor;
 using TechLoop.Application.Features.MCQ.Queries.GetMcqOptionsByQuestionQuery.Mentor;
@@ -446,4 +448,36 @@ public sealed class MentorController : ControllerBase
         return Ok(result);
     }
     
+    //create test-case
+    [HttpPost("questions/{questionId:int}/test-cases")]
+    public async Task<IActionResult> CreateTestCase(int questionId, [FromBody] CreateTestCaseRequest request, CancellationToken cancellationToken)
+    {
+        var command = new CreateTestCaseCommand()
+        {
+            QuestionId = questionId,
+            Input = request.Input,
+            ExpectedOutput = request.ExpectedOutput,
+            IsHidden = request.IsHidden,
+            Position = request.Position
+        };
+
+        var result = await _mediator.Send(command, cancellationToken);
+        return Ok(result);
+    }
+    
+    //update test-case
+    [HttpPut("test-cases/{id:int}")]
+    public async Task<IActionResult> UpdateTestCase(int id, [FromBody] UpdateTestCaseRequest request, CancellationToken cancellationToken)
+    {
+        var command = new UpdateTestCaseCommand()
+        {
+            Id = id,
+            Input = request.Input,
+            ExpectedOutput = request.ExpectedOutput,
+            IsHidden = request.IsHidden,
+            Position = request.Position
+        };
+        var result = await _mediator.Send(command, cancellationToken);
+        return Ok(result);
+    }
 }
