@@ -15,14 +15,15 @@ public sealed class TopicRepository : ITopicsRepository
         _context = context;
     }
     //ExistsAync
-    public async Task<bool> ExistsAsync(string title, CancellationToken cancellationToken)
+    public async Task<bool> ExistsAsync(int technologyId ,string title, CancellationToken cancellationToken)
     {
         const string sql = @"
 SELECT EXISTS
 (
     SELECT 1
     FROM topics
-    WHERE LOWER(title) = LOWER(@Title)
+    WHERE technology_id = @TechnologyId
+    AND LOWER(title) = LOWER(@Title)
     AND deleted_at IS NULL
 );";
 
@@ -30,7 +31,11 @@ SELECT EXISTS
 
         return await connection.ExecuteScalarAsync<bool>(new CommandDefinition(
                 sql,
-                new { Title = title },
+                new
+                {
+                    TechnologyId = technologyId,
+                    Title = title
+                },
                 cancellationToken: cancellationToken));
     }
 
@@ -55,21 +60,26 @@ SELECT EXISTS
     
     
     //PositionExists
-    public async Task<bool> PositionExistsAsync(int position, CancellationToken cancellationToken)
+    public async Task<bool> PositionExistsAsync(int technologyId, int position, CancellationToken cancellationToken)
     {
         const string sql = @"
 SELECT EXISTS
 (
     SELECT 1
     FROM topics
-    WHERE position = @Position
+    WHERE technology_id=@TechnologyId
+    AND position=@Position
     AND deleted_at IS NULL
 );";
         using var connection = _context.CreateConnection();
         return await connection.ExecuteScalarAsync<bool>(
             new CommandDefinition(
                 sql,
-                new { Position = position },
+                new
+                {
+                    TechnologyId = technologyId,
+                    Position = position
+                },
                 cancellationToken: cancellationToken));
     }
     //TechnologyExistsAsync

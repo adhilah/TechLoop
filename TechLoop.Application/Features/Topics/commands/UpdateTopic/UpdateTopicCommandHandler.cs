@@ -39,16 +39,16 @@ public sealed class UpdateTopicCommandHandler : IRequestHandler<UpdatedTopicComm
         {
             throw new ValidationException($"Sub topic slug '{request.Slug}' already exists.");
         }
-        var positionExists = await _repository.PositionExistsAsync(request.Position, cancellationToken);
+        var positionExists = await _repository.PositionExistsAsync(request.TechnologyId, request.Position, cancellationToken);
         if (positionExists && topic.Position != request.Position)
         {
             throw new ValidationException($"Sub topic position '{request.Position}' already exists.");
         }
         
-        var exists = await _repository.ExistsAsync(request.Title, cancellationToken);
+        var exists = await _repository.ExistsAsync(request.TechnologyId, request.Title, cancellationToken);
         if (exists && !topic.Title.Equals(request.Title, StringComparison.OrdinalIgnoreCase))
         {
-            throw new ValidationException($"Topic '{request.Title}' already exists.");
+            throw new ValidationException($"Topic '{request.Title}' already exists in the technology.");
         }
         topic.TechnologyId = request.TechnologyId;
         topic.Title = request.Title.Trim();

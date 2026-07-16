@@ -15,14 +15,15 @@ public class SubTopicsRepository : ISubTopicsRepository
     }
     
     
-    public async Task<bool> ExistsAsync(string title, CancellationToken cancellationToken)
+    public async Task<bool> ExistsAsync(int topicId, string title, CancellationToken cancellationToken)
     {
         const string sql = @"
 SELECT EXISTS
 (
     SELECT 1
     FROM sub_topics
-    WHERE LOWER(title) = LOWER(@Title)
+    WHERE topic_id = @TopicId
+    AND LOWER(title) = LOWER(@Title)
     AND deleted_at IS NULL
 );";
 
@@ -30,7 +31,11 @@ SELECT EXISTS
         return await connection.ExecuteScalarAsync<bool>(
             new CommandDefinition(
                 sql,
-                new { Title = title },
+                new
+                {
+                    TopicId = topicId,
+                    Title = title
+                },
                 cancellationToken: cancellationToken));
     }
     
@@ -55,21 +60,26 @@ SELECT EXISTS
     
     
     //PositionExists
-    public async Task<bool> PositionExistsAsync(int position, CancellationToken cancellationToken)
+    public async Task<bool> PositionExistsAsync(int topicId, int position, CancellationToken cancellationToken)
     {
         const string sql = @"
 SELECT EXISTS
 (
     SELECT 1
     FROM sub_topics
-    WHERE position = @Position
+    WHERE topic_id=@TopicId
+    AND position=@Position
     AND deleted_at IS NULL
 );";
         using var connection = _context.CreateConnection();
         return await connection.ExecuteScalarAsync<bool>(
             new CommandDefinition(
                 sql,
-                new { Position = position },
+                new
+                {
+                    TopicId = topicId,
+                    Position = position
+                },
                 cancellationToken: cancellationToken));
     }
 

@@ -23,10 +23,10 @@ public sealed class CreateTechnologyCommandHandler : IRequestHandler<CreateTechn
 
     public async Task<CreateTechnologyResponse> Handle(CreateTechnologyCommand request, CancellationToken cancellationToken)
     {
-        var exists = await _technologyRepository.ExistsAsync(request.Name, cancellationToken);
+        var exists = await _technologyRepository.ExistsAsync(request.CategoryId, request.Name, cancellationToken);
         if (exists)
         {
-            throw new ValidationException($"Technology '{request.Name}' already exists.");
+            throw new ValidationException($"Technology '{request.Name}' already exists in the category.");
         }
         
         var slugExists = await _technologyRepository.SlugExistsAsync(request.Slug, cancellationToken);
@@ -34,10 +34,10 @@ public sealed class CreateTechnologyCommandHandler : IRequestHandler<CreateTechn
         {
             throw new ValidationException($"Technology slug '{request.Slug}' already exists.");
         }
-        var positionExists = await _technologyRepository.PositionExistsAsync(request.Position, cancellationToken);
+        var positionExists = await _technologyRepository.PositionExistsAsync(request.CategoryId,request.Position, cancellationToken);
         if (positionExists)
         {
-            throw new ValidationException($"Technology position '{request.Position}' already exists.");
+            throw new ValidationException($"Technology position '{request.Position}' already exists in the category.");
         }
         var categoryExists = await _categoryRepository.ExistsAsync(request.CategoryId, cancellationToken);
         if (!categoryExists)

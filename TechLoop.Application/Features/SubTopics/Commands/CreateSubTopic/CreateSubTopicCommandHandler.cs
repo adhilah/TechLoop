@@ -34,16 +34,15 @@ public sealed class CreateSubTopicCommandHandler : IRequestHandler<CreateSubTopi
         {
             throw new ValidationException($"Technology slug '{request.Slug}' already exists.");
         }
-        var positionExists = await _topicsRepository.PositionExistsAsync(request.Position, cancellationToken);
+        var positionExists = await _topicsRepository.PositionExistsAsync(request.TopicId, request.Position, cancellationToken);
         if (positionExists)
         {
-            throw new ValidationException($"Technology position '{request.Position}' already exists.");
+            throw new ValidationException($"Technology position '{request.Position}' already exists in the topic.");
         }
-        var exists = await _subTopicsRepository.ExistsAsync(request.Slug, cancellationToken);
-
+        var exists = await _subTopicsRepository.ExistsAsync(request.TopicId, request.Slug, cancellationToken);
         if (exists)
         {
-            throw new InvalidOperationException($"Sub topic with slug '{request.Slug}' already exists.");
+            throw new InvalidOperationException($"Sub topic with slug '{request.Slug}' already exists in the topic.");
         }
 
         var subTopic = new SubTopic

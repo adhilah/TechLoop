@@ -4,10 +4,9 @@ namespace TechLoop.Application.Interfaces.Repositories;
 
 public interface ITechnologyRepository
 {
-    Task<bool> ExistsAsync(string name, CancellationToken cancellationToken);
+    Task<bool> ExistsAsync(int categoryId, string name, CancellationToken cancellationToken);
     Task<bool> SlugExistsAsync(string slug, CancellationToken cancellationToken);
-
-    Task<bool> PositionExistsAsync(int position, CancellationToken cancellationToken);
+    Task<bool> PositionExistsAsync(int categoryId, int position, CancellationToken cancellationToken);
     Task<bool> CategoryExistsAsync(int categoryId, CancellationToken cancellationToken);
     Task<int> CreateAsync(Technology technology, CancellationToken cancellationToken);
     Task<int> UpdateAsync(Technology technology, CancellationToken cancellationToken);

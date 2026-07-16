@@ -4,9 +4,9 @@ namespace TechLoop.Application.Interfaces.Repositories;
 
 public interface ISubTopicsRepository
 {
-    Task<bool> ExistsAsync(string slug, CancellationToken cancellationToken);
+    Task<bool> ExistsAsync(int topicId, string slug, CancellationToken cancellationToken);
     Task<bool> SlugExistsAsync(string slug, CancellationToken cancellationToken);
-    Task<bool> PositionExistsAsync(int position, CancellationToken cancellationToken);
+    Task<bool> PositionExistsAsync(int topicId, int position, CancellationToken cancellationToken);
     Task<int> CreateAsync(SubTopic subTopic, CancellationToken cancellationToken);
     Task<int> UpdateAsync(SubTopic subTopic, CancellationToken cancellationToken);
     Task<int> SoftDeleteAsync(int id, Guid deletedBy, CancellationToken cancellationToken);

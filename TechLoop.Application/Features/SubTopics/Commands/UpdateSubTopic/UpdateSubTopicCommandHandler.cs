@@ -20,34 +20,30 @@ public sealed class UpdateSubTopicCommandHandler : IRequestHandler<UpdateSubTopi
     public async Task<UpdateSubTopicResponse> Handle(UpdateSubTopicCommand request, CancellationToken cancellationToken)
     {
         var subTopic = await _subtopicrepository.GetByIdAsync(request.Id, cancellationToken);
-
         if (subTopic is null)
         {
             throw new NotFoundException("Sub topic not found.");
         }
-        
         var slugExists = await _subtopicrepository.SlugExistsAsync(request.Slug, cancellationToken);
         if (slugExists && !subTopic.Slug.Equals(request.Slug, StringComparison.OrdinalIgnoreCase))
         {
             throw new ValidationException($"Topic slug '{request.Slug}' already exists.");
         }
-        var positionExists = await _subtopicrepository.PositionExistsAsync(request.Position, cancellationToken);
+        var positionExists = await _subtopicrepository.PositionExistsAsync(request.TopicId,request.Position, cancellationToken);
         if (positionExists && subTopic.Position != request.Position)
         {
-            throw new ValidationException($"Topic position '{request.Position}' already exists.");
+            throw new ValidationException($"Topic position '{request.Position}' already exists in the topic.");
         }
         var topicExists = await _subtopicrepository.TopicExistsAsync(request.TopicId, cancellationToken);
-
         if (!topicExists)
         {
             throw new NotFoundException("Topic not found.");
         }
         
-        var exists = await _subtopicrepository.ExistsAsync(request.Title, cancellationToken);
-
+        var exists = await _subtopicrepository.ExistsAsync(request.TopicId, request.Title, cancellationToken);
         if (exists && !subTopic.Title.Equals(request.Title, StringComparison.OrdinalIgnoreCase))
         {
-            throw new ValidationException($"Sub topic '{request.Title}' already exists.");
+            throw new ValidationException($"Sub topic '{request.Title}' already exists in the topic.");
         }
         subTopic.TopicId = request.TopicId;
         subTopic.Title = request.Title.Trim();
@@ -59,12 +55,10 @@ public sealed class UpdateSubTopicCommandHandler : IRequestHandler<UpdateSubTopi
         subTopic.UpdatedAt = DateTime.UtcNow;
 
         var rowsAffected = await _subtopicrepository.UpdateAsync(subTopic, cancellationToken);
-
         if (rowsAffected <= 0)
         {
             throw new Exception("Failed to update sub topic.");
         }
-
         return new UpdateSubTopicResponse
         {
             Success = true,

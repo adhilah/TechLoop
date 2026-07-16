@@ -35,16 +35,16 @@ public sealed class CreateTopicCommandHandler : IRequestHandler<CreateTopicComma
             throw new ValidationException($"Topic slug '{request.Slug}' already exists.");
         }
 
-        var positionExists = await _repository.PositionExistsAsync(request.Position, cancellationToken);
+        var positionExists = await _repository.PositionExistsAsync(request.TechnologyId,request.Position, cancellationToken);
         if (positionExists)
         {
-            throw new ValidationException($"Topic position '{request.Position}' already exists.");
+            throw new ValidationException($"Topic position '{request.Position}' already exists in the technology.");
         }
         
-        var exists = await _repository.ExistsAsync(request.Title,cancellationToken);
+        var exists = await _repository.ExistsAsync(request.TechnologyId,request.Title,cancellationToken);
         if (exists)
         {
-            throw new ValidationException($"Topic '{request.Title}' already exists.");
+            throw new ValidationException($"Topic '{request.Title}' already exists in the technology.");
         }
         var topic = new Topic
         {
