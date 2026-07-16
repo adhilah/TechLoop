@@ -25,7 +25,7 @@ public sealed class DeleteTestCaseCommandHandler : IRequestHandler<DeleteTestCas
 
         var rowsAffected = await _repository.SoftDeleteAsync(request.Id, _currentUser.UserId, cancellationToken);
         if (rowsAffected <= 0)
-            throw new Exception("Failed to delete test case.");
+            throw new BadRequestException("Failed to delete test case.");
 
         return new DeleteTestCaseResponse
         {

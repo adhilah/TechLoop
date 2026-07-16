@@ -162,4 +162,34 @@ ORDER BY position;";
             new { QuestionId = questionId },
                 cancellationToken: cancellationToken));
     }
+    
+    // Get Visible Test Cases (Learner)
+    public async Task<IEnumerable<TestCase>> GetVisibleByQuestionIdAsync(int questionId, CancellationToken cancellationToken)
+    {
+        const string sql = @"
+SELECT
+    id,
+    question_id AS QuestionId,
+    input,
+    expected_output AS ExpectedOutput,
+    is_hidden AS IsHidden,
+    position,
+    created_by AS CreatedBy,
+    created_at AS CreatedAt,
+    updated_by AS UpdatedBy,
+    updated_at AS UpdatedAt
+FROM test_cases
+WHERE question_id = @QuestionId
+AND is_hidden = FALSE
+AND deleted_at IS NULL
+ORDER BY position;";
+
+        using var connection = _context.CreateConnection();
+        return await connection.QueryAsync<TestCase>(new CommandDefinition(sql,
+                new
+                {
+                    QuestionId = questionId
+                },
+                cancellationToken: cancellationToken));
+    }
 }

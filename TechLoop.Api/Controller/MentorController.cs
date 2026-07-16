@@ -45,6 +45,7 @@ using TechLoop.Application.Features.Coding.Commands.UpdateCodingTemplate;
 using TechLoop.Application.Features.Coding.Commands.UpdateTestCase;
 using TechLoop.Application.Features.Coding.DTOs;
 using TechLoop.Application.Features.Coding.Queries.GetCodingTemplatesByQuestion.Mentor;
+using TechLoop.Application.Features.Coding.Queries.GetTestCasesByQuestion.Mentor;
 using TechLoop.Application.Features.MCQ.Queries.GetMcqOptionsByQuestionQuery.Mentor;
 
 namespace TechLoop.Api.Controllers;
@@ -355,6 +356,14 @@ public sealed class MentorController : ControllerBase
     public async Task<IActionResult> GetCodingTemplatesByQuestion(int questionId, CancellationToken cancellationToken)
     {
         var result = await _mediator.Send(new GetCodingTemplatesByQuestionQuery(questionId), cancellationToken);
+        return Ok(result);
+    }
+    
+    //get testcase
+    [HttpGet("questions/{questionId:int}/test-cases")]
+    public async Task<IActionResult> GetTestCasesByQuestion(int questionId, CancellationToken cancellationToken)
+    {
+        var result = await _mediator.Send(new GetTestCasesByQuestionQuery(questionId), cancellationToken);
         return Ok(result);
     }
      

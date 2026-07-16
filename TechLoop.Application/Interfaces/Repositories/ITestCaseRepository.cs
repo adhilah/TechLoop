@@ -10,4 +10,5 @@ public interface ITestCaseRepository
     Task<TestCase?> GetByIdAsync(int id, CancellationToken cancellationToken);
     Task<IEnumerable<TestCase>> GetByQuestionIdAsync(int questionId, CancellationToken cancellationToken);
     Task<bool> PositionExistsAsync(int questionId, int position, CancellationToken cancellationToken);
+    Task<IEnumerable<TestCase>> GetVisibleByQuestionIdAsync(int questionId, CancellationToken cancellationToken);
 }
