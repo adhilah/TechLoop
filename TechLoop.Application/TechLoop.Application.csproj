@@ -7,7 +7,6 @@
   <ItemGroup>
     <Folder Include="Common\Behaviors\" />
     <Folder Include="Common\Mappings\" />
-    <Folder Include="Features\Coding\Commands\TestCase\DeleteTestCase\" />
     <Folder Include="Features\Coding\Queries\GetCodingTemplates\" />
     <Folder Include="Features\Coding\Queries\GetTestCases\Learner\" />
     <Folder Include="Features\Coding\Queries\GetTestCases\Mentor\" />

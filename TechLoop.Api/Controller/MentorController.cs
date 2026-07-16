@@ -40,6 +40,7 @@ using System.Security.Claims;
 using TechLoop.Application.Features.Coding.Commands.CreateCodingTemplate;
 using TechLoop.Application.Features.Coding.Commands.CreateTestCase;
 using TechLoop.Application.Features.Coding.Commands.DeleteCodingTemplate;
+using TechLoop.Application.Features.Coding.Commands.DeleteTestCase;
 using TechLoop.Application.Features.Coding.Commands.UpdateCodingTemplate;
 using TechLoop.Application.Features.Coding.Commands.UpdateTestCase;
 using TechLoop.Application.Features.Coding.DTOs;
@@ -478,6 +479,14 @@ public sealed class MentorController : ControllerBase
             Position = request.Position
         };
         var result = await _mediator.Send(command, cancellationToken);
+        return Ok(result);
+    }
+    
+    //delete testcase
+    [HttpDelete("test-cases/{id:int}")]
+    public async Task<IActionResult> DeleteTestCase(int id,CancellationToken cancellationToken)
+    {
+        var result = await _mediator.Send(new DeleteTestCaseCommand(id), cancellationToken);
         return Ok(result);
     }
 }
