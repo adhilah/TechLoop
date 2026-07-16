@@ -37,6 +37,10 @@ using TechLoop.Application.Features.MCQ.Commands.DeleteMcqOption;
 using TechLoop.Application.Features.MCQ.Commands.UpdateMcqOption;
 using TechLoop.Application.Features.MCQ.DTOs;
 using System.Security.Claims;
+using TechLoop.Application.Features.Coding.Commands.CreateCodingTemplate;
+using TechLoop.Application.Features.Coding.Commands.DeleteCodingTemplate;
+using TechLoop.Application.Features.Coding.Commands.UpdateCodingTemplate;
+using TechLoop.Application.Features.Coding.DTOs;
 using TechLoop.Application.Features.MCQ.Queries.GetMcqOptionsByQuestionQuery.Mentor;
 
 namespace TechLoop.Api.Controllers;
@@ -334,14 +338,15 @@ public sealed class MentorController : ControllerBase
         return Ok(result);
     }
 
-
-
-
-
-
-    //=======================================================================================================
-
-
+    // Get MCQ Options By Question
+    [HttpGet("questions/{questionId:int}/mcq-options")]
+    public async Task<IActionResult> GetMcqOptionsByQuestionId(int questionId, CancellationToken cancellationToken)
+    {
+        var result = await _mediator.Send(new GetMcqOptionByIdQuery(questionId), cancellationToken);
+        return Ok(result);
+    }
+     
+    //Create mcq option
     [HttpPost("questions/{questionId:int}/mcq_options")]
     public async Task<IActionResult> CreateMcqOption(int questionId,
         [FromBody] CreateMcqOptionRequest request, CancellationToken cancellationToken)
@@ -380,9 +385,7 @@ public sealed class MentorController : ControllerBase
 
     // Delete MCQ Option
     [HttpDelete("mcq-options/{id:int}")]
-    public async Task<IActionResult> DeleteMcqOption(
-        int id,
-        CancellationToken cancellationToken)
+    public async Task<IActionResult> DeleteMcqOption(int id, CancellationToken cancellationToken)
     {
         await _mediator.Send(new DeleteMcqOptionCommand(id), cancellationToken);
         return Ok(new
@@ -391,12 +394,47 @@ public sealed class MentorController : ControllerBase
             Message = "MCQ option deleted successfully."
         });
     }
-
-    // Get Options By Question
-    [HttpGet("questions/{questionId:int}/mcq-options")]
-    public async Task<IActionResult> GetMcqOptionsByQuestionId(int questionId, CancellationToken cancellationToken)
+    
+    // create coding templates
+    [HttpPost("questions/{questionId:int}/coding-templates")]
+    public async Task<IActionResult> CreateCodingTemplate(int questionId,
+        [FromBody] CreateCodingTemplateRequest request, CancellationToken cancellationToken)
     {
-        var result = await _mediator.Send(new GetMcqOptionByIdQuery(questionId), cancellationToken);
+        var command = new CreateCodingTemplateCommand()
+        {
+            QuestionId = questionId,
+            TechnologyId = request.TechnologyId,
+            StarterCode = request.StarterCode,
+            SolutionCode = request.SolutionCode
+        };
+
+        var result = await _mediator.Send(command, cancellationToken);
         return Ok(result);
     }
+    
+    //update coding template
+    [HttpPut("coding-templates/{id:int}")]
+    public async Task<IActionResult> UpdateCodingTemplate(int id,
+        [FromBody] UpdateCodingTemplateRequest request, CancellationToken cancellationToken)
+    {
+        var command = new UpdateCodingTemplateCommand()
+        {
+            Id = id,
+            TechnologyId = request.TechnologyId,
+            StarterCode = request.StarterCode,
+            SolutionCode = request.SolutionCode
+        };
+
+        var result = await _mediator.Send(command, cancellationToken);
+        return Ok(result);
+    }
+    
+    //delete coding template
+    [HttpDelete("coding-templates/{id:int}")]
+    public async Task<IActionResult> DeleteCodingTemplate(int id, CancellationToken cancellationToken)
+    {
+        var result = await _mediator.Send( new DeleteCodingTemplateCommand(id), cancellationToken);
+        return Ok(result);
+    }
+    
 }
