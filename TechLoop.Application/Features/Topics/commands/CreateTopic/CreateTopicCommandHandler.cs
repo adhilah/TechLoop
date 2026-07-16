@@ -29,17 +29,16 @@ public sealed class CreateTopicCommandHandler : IRequestHandler<CreateTopicComma
             throw new NotFoundException("Technology not found.");
         }
         
-        var slugExists = await _technologyRepository.SlugExistsAsync(request.Slug, cancellationToken);
+        var slugExists = await _repository.SlugExistsAsync(request.Slug, cancellationToken);
         if (slugExists)
         {
-            throw new ValidationException(
-                $"Technology slug '{request.Slug}' already exists.");
+            throw new ValidationException($"Topic slug '{request.Slug}' already exists.");
         }
-        var positionExists = await _technologyRepository.PositionExistsAsync(request.Position, cancellationToken);
+
+        var positionExists = await _repository.PositionExistsAsync(request.Position, cancellationToken);
         if (positionExists)
         {
-            throw new ValidationException(
-                $"Technology position '{request.Position}' already exists.");
+            throw new ValidationException($"Topic position '{request.Position}' already exists.");
         }
         
         var exists = await _repository.ExistsAsync(request.Title,cancellationToken);

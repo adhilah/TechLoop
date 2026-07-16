@@ -32,7 +32,12 @@ using TechLoop.Application.Features.Technologies.Queries.GetTechnologyById.Mento
 using TechLoop.Application.Features.Topics.DTOs;
 using TechLoop.Application.Features.Topics.Queries.GetAllTopics.Mentor;
 using TechLoop.Application.Features.Topics.Queries.GetTopicById.Mentor;
-//using System.Security.Claims;
+using TechLoop.Application.Features.MCQ.Commands.CreateMcqOption;
+using TechLoop.Application.Features.MCQ.Commands.DeleteMcqOption;
+using TechLoop.Application.Features.MCQ.Commands.UpdateMcqOption;
+using TechLoop.Application.Features.MCQ.DTOs;
+//using TechLoop.Application.Features.MCQ.Queries.GetMcqOptions;
+using System.Security.Claims;
 
 namespace TechLoop.Api.Controllers;
 
@@ -349,4 +354,74 @@ public sealed class MentorController : ControllerBase
 
         return Ok(result);
     }
-}
+    
+    
+    
+    
+    
+    
+    //=======================================================================================================
+    
+    
+    [HttpPost("questions/{questionId:int}/mcq_options")]
+    public async Task<IActionResult> CreateMcqOption(int questionId,
+        [FromBody] CreateMcqOptionRequest request, CancellationToken cancellationToken)
+    {
+        var command = new CreateMcqOptionCommand
+        {
+            QuestionId = questionId,
+            OptionText = request.OptionText,
+            IsCorrect = request.IsCorrect,
+            Position = request.Position
+        };
+
+        var result = await _mediator.Send(command, cancellationToken);
+        return Ok(result);
+    }
+
+    // Update MCQ Option
+    [HttpPut("mcq-options/{id:int}")]
+    public async Task<IActionResult> UpdateMcqOption(
+        int id,
+        [FromBody] UpdateMcqOptionRequest request,
+        CancellationToken cancellationToken)
+    {
+        var command = new UpdateMcqOptionCommand
+        {
+            Id = id,
+            OptionText = request.OptionText,
+            IsCorrect = request.IsCorrect,
+            Position = request.Position
+        };
+
+        var response = await _mediator.Send(command, cancellationToken);
+
+        return Ok(response);
+    }
+
+    // Delete MCQ Option
+    [HttpDelete("mcq-options/{id:int}")]
+    public async Task<IActionResult> DeleteMcqOption(
+        int id,
+        CancellationToken cancellationToken)
+    {
+        await _mediator.Send(new DeleteMcqOptionCommand(id), cancellationToken);
+        return Ok(new
+        {
+            Success = true,
+            Message = "MCQ option deleted successfully."
+        });
+    }}
+
+    // Get Options By Question
+    // [HttpGet("questions/{questionId:int}/options")]
+    // public async Task<IActionResult> GetMcqOptions(
+    //     int questionId,
+    //     CancellationToken cancellationToken)
+    // {
+    //     var result = await Mediator.Send(
+    //         new GetMcqOptionsQuery(questionId),
+    //         cancellationToken);
+    //
+    //     return Ok(result);
+    // }

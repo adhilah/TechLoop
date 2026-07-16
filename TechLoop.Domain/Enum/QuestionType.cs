@@ -3,5 +3,6 @@
 public enum QuestionType
 {
     mcq = 1,
-    coding = 2
+    coding = 2,
+    challenge= 3
 }

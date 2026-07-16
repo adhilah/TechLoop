@@ -7,6 +7,9 @@
   <ItemGroup>
     <Folder Include="Common\Behaviors\" />
     <Folder Include="Common\Mappings\" />
+    <Folder Include="Features\Coding\Commands\CreateCodingTemplate\" />
+    <Folder Include="Features\Coding\Commands\CreateTestCase\" />
+    <Folder Include="Features\Coding\Queries\GetTestCases\" />
     <Folder Include="Features\SubTopics\Queries\GetAllSubTopic\" />
     <Folder Include="Features\SubTopics\Queries\GetSubTopicById\" />
   </ItemGroup>
