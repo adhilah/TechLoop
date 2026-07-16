@@ -10,6 +10,7 @@
     <Folder Include="Features\Coding\Commands\CreateCodingTemplate\" />
     <Folder Include="Features\Coding\Commands\CreateTestCase\" />
     <Folder Include="Features\Coding\Queries\GetTestCases\" />
+    <Folder Include="Features\MCQ\Queries\GetMcqOptionsByQuestionQuery\" />
     <Folder Include="Features\SubTopics\Queries\GetAllSubTopic\" />
     <Folder Include="Features\SubTopics\Queries\GetSubTopicById\" />
   </ItemGroup>

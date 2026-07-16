@@ -182,7 +182,8 @@ SELECT EXISTS
     SELECT 1
     FROM mcq_options
     WHERE question_id = @QuestionId
-      AND is_correct = TRUE
+    AND is_correct = TRUE
+    AND deleted_at IS NULL
 );";
 
         using var connection = _context.CreateConnection();

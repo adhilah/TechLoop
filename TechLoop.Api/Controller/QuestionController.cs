@@ -1,5 +1,6 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using TechLoop.Application.Features.MCQ.Queries.GetMcqOptionsByQuestionQuery.Learner;
 using TechLoop.Application.Features.Questions.DTOs;
 using TechLoop.Application.Features.Questions.Queries.GetAllQuestions.Learner;
 using TechLoop.Application.Features.Questions.Queries.GetLearnerQuestionById;
@@ -40,6 +41,13 @@ public sealed class QuestionController : ControllerBase
             new GetLearnerQuestionByIdQuery(id),
             cancellationToken);
 
+        return Ok(result);
+    }
+    
+    [HttpGet("questions/{questionId:int}/mcq-options")]
+    public async Task<IActionResult> GetPublishedMcqOptionsByQuestionId(int questionId, CancellationToken cancellationToken)
+    {
+        var result = await _mediator.Send(new GetPublishedMcqOptionByIdQuery(questionId), cancellationToken);
         return Ok(result);
     }
 }

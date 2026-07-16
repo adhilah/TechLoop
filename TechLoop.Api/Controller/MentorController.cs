@@ -36,8 +36,8 @@ using TechLoop.Application.Features.MCQ.Commands.CreateMcqOption;
 using TechLoop.Application.Features.MCQ.Commands.DeleteMcqOption;
 using TechLoop.Application.Features.MCQ.Commands.UpdateMcqOption;
 using TechLoop.Application.Features.MCQ.DTOs;
-//using TechLoop.Application.Features.MCQ.Queries.GetMcqOptions;
 using System.Security.Claims;
+using TechLoop.Application.Features.MCQ.Queries.GetMcqOptionsByQuestionQuery.Mentor;
 
 namespace TechLoop.Api.Controllers;
 
@@ -107,17 +107,13 @@ public sealed class MentorController : ControllerBase
 
     //Soft Delete Technology
     [HttpDelete("technologies/{id:int}")]
-    public async Task<IActionResult> DeleteTechnology(
-        int id,
-        CancellationToken cancellationToken)
+    public async Task<IActionResult> DeleteTechnology(int id, CancellationToken cancellationToken)
     {
         var command = new DeleteTechnologyCommand(id);
-
         var result = await _mediator.Send(command, cancellationToken);
-
         return Ok(result);
     }
-    
+
     // Get all technologies with all details
     [HttpGet("technologies")]
     public async Task<ActionResult<IEnumerable<MentorTechnologyResponse>>> GetAllTechnologies(CancellationToken cancellationToken)
@@ -125,7 +121,7 @@ public sealed class MentorController : ControllerBase
         var result = await _mediator.Send(new GetAllMentorTechnologiesQuery(), cancellationToken);
         return Ok(result);
     }
-    
+
     // Get all details of  technology by Id
     [HttpGet("technologies/{id:int}")]
     public async Task<ActionResult<MentorTechnologyResponse>> GetTechnologyById(int id, CancellationToken cancellationToken)
@@ -138,8 +134,7 @@ public sealed class MentorController : ControllerBase
     // Create Topic
     [HttpPost("topics")]
     public async Task<ActionResult<CreateTopicResponse>> CreateTopic(
-        [FromBody] CreateTopicCommand command,
-        CancellationToken cancellationToken)
+        [FromBody] CreateTopicCommand command, CancellationToken cancellationToken)
     {
         var result = await _mediator.Send(command, cancellationToken);
         return Ok(result);
@@ -156,8 +151,7 @@ public sealed class MentorController : ControllerBase
     //Update Topic
     [HttpPut("topics/{id:int}")]
     public async Task<ActionResult<UpdateTopicResponse>> UpdateTopic(int id,
-        [FromBody] UpdateTopicRequest request,
-        CancellationToken cancellationToken)
+        [FromBody] UpdateTopicRequest request, CancellationToken cancellationToken)
     {
         var command = new UpdatedTopicCommand(
             id,
@@ -175,42 +169,29 @@ public sealed class MentorController : ControllerBase
 
     //Soft Delete Topic
     [HttpDelete("topics/{id:int}")]
-    public async Task<ActionResult<DeleteTopicResponse>> DeleteTopic(
-        int id,
-        CancellationToken cancellationToken)
+    public async Task<ActionResult<DeleteTopicResponse>> DeleteTopic(int id, CancellationToken cancellationToken)
     {
         var command = new DeleteTopicCommand(id);
-
         var result = await _mediator.Send(command, cancellationToken);
-
         return Ok(result);
     }
-    
+
     //GET All Topics
     [HttpGet("topics")]
-    public async Task<ActionResult<IEnumerable<MentorTopicResponse>>> GetAllTopics(
-        CancellationToken cancellationToken)
+    public async Task<ActionResult<IEnumerable<MentorTopicResponse>>> GetAllTopics(CancellationToken cancellationToken)
     {
-        var result = await _mediator.Send(
-            new GetAllMentorTopicsQuery(),
-            cancellationToken);
-
+        var result = await _mediator.Send(new GetAllMentorTopicsQuery(), cancellationToken);
         return Ok(result);
     }
 
     //GET Topic By Id
     [HttpGet("topics/{id:int}")]
-    public async Task<ActionResult<MentorTopicResponse>> GetTopicById(
-        int id,
-        CancellationToken cancellationToken)
+    public async Task<ActionResult<MentorTopicResponse>> GetTopicById(int id, CancellationToken cancellationToken)
     {
-        var result = await _mediator.Send(
-            new GetMentorTopicByIdQuery(id),
-            cancellationToken);
-
+        var result = await _mediator.Send(new GetMentorTopicByIdQuery(id), cancellationToken);
         return Ok(result);
     }
-    
+
     //create subtop
     [HttpPost("subtopics")]
     public async Task<ActionResult<CreateSubTopicResponse>> CreateSubTopic(
@@ -225,14 +206,12 @@ public sealed class MentorController : ControllerBase
             request.Position);
 
         var result = await _mediator.Send(command, cancellationToken);
-
         return Ok(result);
     }
 
     // update publish
     [HttpPatch("subtopics/{id:int}/publish")]
-    public async Task<ActionResult<PublishSubTopicResponse>> PublishSubTopic(int id,
-        CancellationToken cancellationToken)
+    public async Task<ActionResult<PublishSubTopicResponse>> PublishSubTopic(int id, CancellationToken cancellationToken)
     {
         var result = await _mediator.Send(new PublishSubTopicCommand(id), cancellationToken);
         return Ok(result);
@@ -354,15 +333,15 @@ public sealed class MentorController : ControllerBase
 
         return Ok(result);
     }
-    
-    
-    
-    
-    
-    
+
+
+
+
+
+
     //=======================================================================================================
-    
-    
+
+
     [HttpPost("questions/{questionId:int}/mcq_options")]
     public async Task<IActionResult> CreateMcqOption(int questionId,
         [FromBody] CreateMcqOptionRequest request, CancellationToken cancellationToken)
@@ -411,17 +390,13 @@ public sealed class MentorController : ControllerBase
             Success = true,
             Message = "MCQ option deleted successfully."
         });
-    }}
+    }
 
     // Get Options By Question
-    // [HttpGet("questions/{questionId:int}/options")]
-    // public async Task<IActionResult> GetMcqOptions(
-    //     int questionId,
-    //     CancellationToken cancellationToken)
-    // {
-    //     var result = await Mediator.Send(
-    //         new GetMcqOptionsQuery(questionId),
-    //         cancellationToken);
-    //
-    //     return Ok(result);
-    // }
+    [HttpGet("questions/{questionId:int}/mcq-options")]
+    public async Task<IActionResult> GetMcqOptionsByQuestionId(int questionId, CancellationToken cancellationToken)
+    {
+        var result = await _mediator.Send(new GetMcqOptionByIdQuery(questionId), cancellationToken);
+        return Ok(result);
+    }
+}
