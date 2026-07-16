@@ -41,6 +41,7 @@ using TechLoop.Application.Features.Coding.Commands.CreateCodingTemplate;
 using TechLoop.Application.Features.Coding.Commands.DeleteCodingTemplate;
 using TechLoop.Application.Features.Coding.Commands.UpdateCodingTemplate;
 using TechLoop.Application.Features.Coding.DTOs;
+using TechLoop.Application.Features.Coding.Queries.GetCodingTemplatesByQuestion.Mentor;
 using TechLoop.Application.Features.MCQ.Queries.GetMcqOptionsByQuestionQuery.Mentor;
 
 namespace TechLoop.Api.Controllers;
@@ -338,11 +339,19 @@ public sealed class MentorController : ControllerBase
         return Ok(result);
     }
 
-    // Get MCQ Options By Question
+    // Get MCQ options by question
     [HttpGet("questions/{questionId:int}/mcq-options")]
     public async Task<IActionResult> GetMcqOptionsByQuestionId(int questionId, CancellationToken cancellationToken)
     {
         var result = await _mediator.Send(new GetMcqOptionByIdQuery(questionId), cancellationToken);
+        return Ok(result);
+    }
+    
+    //Get coding template by question
+    [HttpGet("questions/{questionId:int}/coding-templates")]
+    public async Task<IActionResult> GetCodingTemplatesByQuestion(int questionId, CancellationToken cancellationToken)
+    {
+        var result = await _mediator.Send(new GetCodingTemplatesByQuestionQuery(questionId), cancellationToken);
         return Ok(result);
     }
      

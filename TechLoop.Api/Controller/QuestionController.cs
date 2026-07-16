@@ -1,5 +1,6 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using TechLoop.Application.Features.Coding.Queries.GetCodingTemplatesByQuestion.Learner;
 using TechLoop.Application.Features.MCQ.Queries.GetMcqOptionsByQuestionQuery.Learner;
 using TechLoop.Application.Features.Questions.DTOs;
 using TechLoop.Application.Features.Questions.Queries.GetAllQuestions.Learner;
@@ -44,10 +45,19 @@ public sealed class QuestionController : ControllerBase
         return Ok(result);
     }
     
+    //get mcq-option by question 
     [HttpGet("questions/{questionId:int}/mcq-options")]
     public async Task<IActionResult> GetPublishedMcqOptionsByQuestionId(int questionId, CancellationToken cancellationToken)
     {
         var result = await _mediator.Send(new GetPublishedMcqOptionByIdQuery(questionId), cancellationToken);
+        return Ok(result);
+    }
+    
+    //get coding template by question
+    [HttpGet("questions/{questionId:int}/coding-templates")]
+    public async Task<IActionResult> GetPublishedCodingTemplatesByQuestion(int questionId, CancellationToken cancellationToken)
+    {
+        var result = await _mediator.Send(new GetPublishedCodingTemplatesByQuestionQuery(questionId), cancellationToken);
         return Ok(result);
     }
 }

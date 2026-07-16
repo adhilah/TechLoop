@@ -10,8 +10,7 @@
     <Folder Include="Features\Coding\Commands\TestCase\CreateTestCase\" />
     <Folder Include="Features\Coding\Commands\TestCase\DeleteTestCase\" />
     <Folder Include="Features\Coding\Commands\TestCase\UpdateTestCase\" />
-    <Folder Include="Features\Coding\Queries\GetCodingTemplates\Learner\" />
-    <Folder Include="Features\Coding\Queries\GetCodingTemplates\Mentor\" />
+    <Folder Include="Features\Coding\Queries\GetCodingTemplates\" />
     <Folder Include="Features\Coding\Queries\GetTestCases\Learner\" />
     <Folder Include="Features\Coding\Queries\GetTestCases\Mentor\" />
     <Folder Include="Features\MCQ\Queries\GetMcqOptionsByQuestionQuery\" />
