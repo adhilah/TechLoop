@@ -1,8 +1,9 @@
 ﻿import { useState } from "react";
-import { login } from "../services/authService";
-import { Link } from "react-router-dom";
-import { showToast } from "../utils/toast";
-import authImage from "../assets/AuthImage.jpg";
+import { login } from "../../services/authService";
+import { Link,useNavigate  } from "react-router-dom";
+import { showToast} from "../../utils/toast.ts";
+import authImage from "../../assets/AuthImage.jpg";
+
 
 interface FieldProps {
     label: string;
@@ -74,11 +75,10 @@ function Field({
 export default function LoginPage() {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
-
     const [loading, setLoading] = useState(false);
-
     const [errors, setErrors] = useState<Record<string, string>>({});
-
+    
+    
     const validate = () => {
         const e: Record<string, string> = {};
 
@@ -93,20 +93,22 @@ export default function LoginPage() {
         return Object.keys(e).length === 0;
     };
 
+    const navigate = useNavigate();
+
     const handleSignIn = async () => {
         if (!validate()) return;
 
         setLoading(true);
 
         try {
-            const response = await login({
+            await login({
                 email,
                 password,
             });
 
-            console.log(response);
-
             showToast.success("Login successful");
+
+            navigate("/learner"); 
         } catch (err: any) {
             showToast.error(err.message || "Login failed");
         } finally {

@@ -26,19 +26,16 @@ public sealed class CreateQuestionCommandHandler : IRequestHandler<CreateQuestio
         {
             throw new NotFoundException("Sub topic not found.");
         }
-
         var slugExists = await _questionRepository.SlugExistsAsync(request.Slug, cancellationToken);
         if (slugExists)
         {
             throw new ValidationException($"Question slug '{request.Slug}' already exists.");
         }
-
         var positionExists = await _questionRepository.PositionExistsAsync(request.SubTopicId, request.Position, cancellationToken);
         if (positionExists)
         {
             throw new ValidationException($"Question position '{request.Position}' already exists.");
         }
-
         var question = new Question
         {
             SubTopicId = request.SubTopicId,

@@ -386,10 +386,7 @@ public sealed class MentorController : ControllerBase
 
     // Update MCQ Option
     [HttpPut("mcq-options/{id:int}")]
-    public async Task<IActionResult> UpdateMcqOption(
-        int id,
-        [FromBody] UpdateMcqOptionRequest request,
-        CancellationToken cancellationToken)
+    public async Task<IActionResult> UpdateMcqOption(int id, [FromBody] UpdateMcqOptionRequest request, CancellationToken cancellationToken)
     {
         var command = new UpdateMcqOptionCommand
         {
@@ -400,7 +397,6 @@ public sealed class MentorController : ControllerBase
         };
 
         var response = await _mediator.Send(command, cancellationToken);
-
         return Ok(response);
     }
 

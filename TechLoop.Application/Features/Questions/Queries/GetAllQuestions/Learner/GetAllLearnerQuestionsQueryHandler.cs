@@ -5,23 +5,17 @@ using TechLoop.Application.Interfaces.Repositories;
 
 namespace TechLoop.Application.Features.Questions.Queries.GetAllLearnerQuestions;
 
-public sealed class GetAllLearnerQuestionsQueryHandler
-    : IRequestHandler<GetAllLearnerQuestionsQuery, IEnumerable<LearnerQuestionResponse>>
+public sealed class GetAllLearnerQuestionsQueryHandler : IRequestHandler<GetAllLearnerQuestionsQuery, IEnumerable<LearnerQuestionResponse>>
 {
     private readonly IQuestionRepository _repository;
-
-    public GetAllLearnerQuestionsQueryHandler(
-        IQuestionRepository repository)
+    public GetAllLearnerQuestionsQueryHandler(IQuestionRepository repository)
     {
         _repository = repository;
     }
 
-    public async Task<IEnumerable<LearnerQuestionResponse>> Handle(
-        GetAllLearnerQuestionsQuery request,
-        CancellationToken cancellationToken)
+    public async Task<IEnumerable<LearnerQuestionResponse>> Handle(GetAllLearnerQuestionsQuery request, CancellationToken cancellationToken)
     {
         var questions = await _repository.GetPublishedAsync(cancellationToken);
-
         return questions.Select(question => new LearnerQuestionResponse
         {
             Id = question.Id,

@@ -109,6 +109,30 @@ AND deleted_at IS NULL;";
                 },
                 cancellationToken: cancellationToken));
     }
+    
+    // Soft delete by Question
+    public async Task<int> SoftDeleteByQuestionIdAsync(int questionId, Guid deletedBy, CancellationToken cancellationToken)
+    {
+        const string sql = @"
+UPDATE test_cases
+SET
+    deleted_by = @DeletedBy,
+    deleted_at = @DeletedAt
+WHERE question_id = @QuestionId
+AND deleted_at IS NULL;";
+
+        using var connection = _context.CreateConnection();
+        return await connection.ExecuteAsync(
+            new CommandDefinition(
+                sql,
+                new
+                {
+                    QuestionId = questionId,
+                    DeletedBy = deletedBy,
+                    DeletedAt = DateTime.UtcNow
+                },
+                cancellationToken: cancellationToken));
+    }
 
     // Get by id
     public async Task<TestCase?> GetByIdAsync(int id, CancellationToken cancellationToken)

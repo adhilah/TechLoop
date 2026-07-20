@@ -12,11 +12,15 @@ public sealed class DeleteQuestionCommandHandler : IRequestHandler<DeleteQuestio
     private readonly IQuestionRepository _questionRepository;
     private readonly IMcqOptionRepository _mcqOptionRepository;
     private readonly ICurrentUserService _currentUserService;
+    private readonly ICodingTemplateRepository _codingTemplateRepository;
+    private readonly ITestCaseRepository _testCaseRepository;
 
-    public DeleteQuestionCommandHandler(IQuestionRepository questionRepository, IMcqOptionRepository mcqOptionRepository, ICurrentUserService currentUserService)
+    public DeleteQuestionCommandHandler(IQuestionRepository questionRepository, IMcqOptionRepository mcqOptionRepository, ICodingTemplateRepository codingTemplateRepository, ITestCaseRepository testCaseRepository, ICurrentUserService currentUserService)
     {
         _questionRepository = questionRepository;
         _mcqOptionRepository = mcqOptionRepository;
+        _codingTemplateRepository = codingTemplateRepository;
+        _testCaseRepository = testCaseRepository;
         _currentUserService = currentUserService;
     }
 
@@ -34,6 +38,18 @@ public sealed class DeleteQuestionCommandHandler : IRequestHandler<DeleteQuestio
         {
             await _mcqOptionRepository.SoftDeleteByQuestionIdAsync(question.Id, _currentUserService.UserId, cancellationToken);
         }
+        
+        // Soft delete coding templates
+        await _codingTemplateRepository.SoftDeleteByQuestionIdAsync(
+            question.Id,
+            _currentUserService.UserId,
+            cancellationToken);
+
+        // Soft delete test cases
+        await _testCaseRepository.SoftDeleteByQuestionIdAsync(
+            question.Id,
+            _currentUserService.UserId,
+            cancellationToken);
 
         // Soft delete question
         var rowsAffected = await _questionRepository.SoftDeleteAsync(request.Id, _currentUserService.UserId, cancellationToken);
