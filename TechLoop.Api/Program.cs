@@ -69,7 +69,7 @@ builder.Services.AddScoped<IRefreshTokenRepository, RefreshTokenRepository>();
 builder.Services.AddScoped<ITechnologyRepository, TechnologyRepository>();
 builder.Services.AddScoped<ITopicsRepository, TopicRepository>();
 builder.Services.AddScoped<ISubTopicsRepository, SubTopicsRepository>();
-builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
+builder.Services.AddScoped<ITechnologyCategoryRepository, TechnologyCategoryRepository>();
 builder.Services.AddScoped<IQuestionRepository, QuestionRepository>();
 builder.Services.AddScoped<IMcqOptionRepository, McqOptionRepository>();
 builder.Services.AddScoped<ICodingTemplateRepository, CodingTemplateRepository>();
