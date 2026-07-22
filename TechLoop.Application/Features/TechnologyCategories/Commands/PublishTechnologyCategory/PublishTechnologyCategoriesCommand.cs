@@ -1,5 +1,6 @@
 ﻿using MediatR;
+using TechLoop.Application.Features.TechnologyCategories.DTOs;
 
-namespace TechLoop.Application.Features.TechnologyCategories.Commands.PublishTechnologyCategories;
+namespace TechLoop.Application.Features.TechnologyCategories.Commands.PublishTechnologyCategory;
 
-public sealed record PublishTechnologyCategoryCommand (int Id ) : IRequest<Unit>;
+public sealed record PublishTechnologyCategoryCommand(int Id) : IRequest<PublishTechnologyCategoryResponse>;

@@ -13,7 +13,7 @@ using TechLoop.Application.Features.TechnologyCategories.Queries.GetTechnologyCa
 namespace TechLoop.Api.Controllers;
 
 [Authorize(Roles = "Admin")]
-[Route("api/admin")]
+[Route("admin")]
 [ApiController]
 public sealed class AdminController : ControllerBase
 {

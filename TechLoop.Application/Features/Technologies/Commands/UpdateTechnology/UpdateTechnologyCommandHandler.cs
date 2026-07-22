@@ -12,12 +12,12 @@ public sealed class UpdateTechnologyCommandHandler : IRequestHandler<UpdateTechn
 {
    private readonly ITechnologyRepository _technologyRepository;
    private readonly ICurrentUserService _currentUserService;
-   private readonly ICategoryRepository _categoryRepository;
+   private readonly ITechnologyCategoryRepository _technologycategoryRepository;
 
-   public UpdateTechnologyCommandHandler(ITechnologyRepository technologyRepository, ICategoryRepository categoryRepository, ICurrentUserService currentUserService)
+   public UpdateTechnologyCommandHandler(ITechnologyRepository technologyRepository, ITechnologyCategoryRepository technologycategoryRepository, ICurrentUserService currentUserService)
    {
       _technologyRepository = technologyRepository;
-      _categoryRepository = categoryRepository;
+      _technologycategoryRepository = technologycategoryRepository;
       _currentUserService = currentUserService;
    }
 
@@ -45,7 +45,7 @@ public sealed class UpdateTechnologyCommandHandler : IRequestHandler<UpdateTechn
          throw new ValidationException($"Technology position '{request.Position}' already exists in the category.");
       }
       
-      var categoryExists = await _categoryRepository.ExistsAsync(request.CategoryId, cancellationToken);
+      var categoryExists = await _technologycategoryRepository.ExistsAsync(request.CategoryId, cancellationToken);
 
       if (!categoryExists)
       {

@@ -1,7 +1,7 @@
 ﻿using MediatR;
 using TechLoop.Application.Features.TechnologyCategories.DTOs;
 
-namespace TechLoop.Application.Features.TechnologyCategories.Commands.CreateTechnologyCategories;
+namespace TechLoop.Application.Features.TechnologyCategories.Commands.CreateTechnologyCategory;
 
 public sealed record CreateTechnologyCategoriesCommand
 (

@@ -1,6 +1,6 @@
 ﻿using MediatR;
 using TechLoop.Application.Features.TechnologyCategories.DTOs;
 
-namespace TechLoop.Application.Features.TechnologyCategories.Queries.GetTechnologyCategoriesById.LearnerMentor;
+namespace TechLoop.Application.Features.TechnologyCategories.Queries.GetTechnologyCategoryById.LearnerMentor;
 
-public sealed record GetPublishedTechnologyCategoriesByIdQuery(int Id) : IRequest<LearnerMentorTechnologyCategoryResponse?>;
+public sealed record GetPublishedTechnologyCategoryByIdQuery(int Id) : IRequest<LearnerMentorTechnologyCategoryResponse?>;

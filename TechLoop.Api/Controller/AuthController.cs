@@ -71,18 +71,20 @@ public class AuthController : ControllerBase
 
     private void SetAuthCookies(AuthResponse response)
     {
+        Console.WriteLine($"Access Token Empty: {string.IsNullOrWhiteSpace(response.AccessToken)}");
+        Console.WriteLine($"Refresh Token Empty: {string.IsNullOrWhiteSpace(response.RefreshToken)}");
         Response.Cookies.Append("accessToken", response.AccessToken, new CookieOptions
         {
             HttpOnly = true,
-            Secure = true,
-            SameSite = SameSiteMode.Strict,
+            Secure = false,
+            SameSite = SameSiteMode.Lax,
             Expires = DateTimeOffset.UtcNow.AddMinutes(15)
         });
         Response.Cookies.Append("refreshToken", response.RefreshToken, new CookieOptions
         {
             HttpOnly = true,
-            Secure = true,
-            SameSite = SameSiteMode.Strict,
+            Secure = false,
+            SameSite = SameSiteMode.Lax,
             Expires = DateTimeOffset.UtcNow.AddDays(8)
         });
     }
@@ -92,8 +94,8 @@ public class AuthController : ControllerBase
         var options = new CookieOptions
         {
             HttpOnly = true,
-            Secure = true,
-            SameSite = SameSiteMode.Strict
+            Secure = false,
+            SameSite = SameSiteMode.Lax
         };
 
         Response.Cookies.Delete("accessToken", options);

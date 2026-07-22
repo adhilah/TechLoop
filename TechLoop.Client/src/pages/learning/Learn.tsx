@@ -7,31 +7,33 @@ import technologyService from "../../services/technologyService";
 import type { Technology } from "../../types/technology";
 import { LoaderBar } from "../../components/common/Loader";
 import EmptyState from "../../components/common/EmptyState";
+import technologyCategoryService from "../../services/technologyCategoryService";
+import type { TechnologyCategory } from "../../types/technologyCategory";
 
-const categories = [
-    "All",
-    "Programming",
-    "Frontend",
-    "Backend",
-    "Database",
-    "Cloud",
-    "DevOps",
-];
+
 
 export default function Learn() {
+    const [categories, setCategories] = useState<TechnologyCategory[]>([]);
     const [technologies, setTechnologies] = useState<Technology[]>([]);
     const [loading, setLoading] = useState(true);
     const [search, setSearch] = useState("");
-    const [selectedCategory, setSelectedCategory] = useState("All");
+    const [selectedCategory, setSelectedCategory] = useState<number | null>(null);
 
     useEffect(() => {
-        loadTechnologies();
+        void loadData();
     }, []);
 
-    async function loadTechnologies() {
+    async function loadData() {
         try {
-            const data = await technologyService.getAll();
-            setTechnologies(data);
+            const technologiesData = await technologyService.getAll();setTechnologies(technologiesData);
+            try {
+                const categoriesData = await technologyCategoryService.getAll();setCategories(categoriesData);
+                if (categoriesData.length > 0) {
+                    setSelectedCategory(categoriesData[0].id);
+                }
+            } catch (error) {
+                console.warn("Unable to load categories.", error);
+            }
         } finally {
             setLoading(false);
         }

@@ -10,9 +10,9 @@ C:\Users\Athila\Desktop\.net\TechLoop\TechLoop.Infrastructure\obj\Debug\net10.0\
 C:\Users\Athila\Desktop\.net\TechLoop\TechLoop.Infrastructure\obj\Debug\net10.0\TechLoop.Infrastructure.AssemblyInfoInputs.cache
 C:\Users\Athila\Desktop\.net\TechLoop\TechLoop.Infrastructure\obj\Debug\net10.0\TechLoop.Infrastructure.AssemblyInfo.cs
 C:\Users\Athila\Desktop\.net\TechLoop\TechLoop.Infrastructure\obj\Debug\net10.0\TechLoop.Infrastructure.csproj.CoreCompileInputs.cache
+C:\Users\Athila\Desktop\.net\TechLoop\TechLoop.Infrastructure\obj\Debug\net10.0\TechLoop.Infrastructure.sourcelink.json
 C:\Users\Athila\Desktop\.net\TechLoop\TechLoop.Infrastructure\obj\Debug\net10.0\TechLoop.3AEA59C5.Up2Date
 C:\Users\Athila\Desktop\.net\TechLoop\TechLoop.Infrastructure\obj\Debug\net10.0\TechLoop.Infrastructure.dll
 C:\Users\Athila\Desktop\.net\TechLoop\TechLoop.Infrastructure\obj\Debug\net10.0\refint\TechLoop.Infrastructure.dll
 C:\Users\Athila\Desktop\.net\TechLoop\TechLoop.Infrastructure\obj\Debug\net10.0\TechLoop.Infrastructure.pdb
 C:\Users\Athila\Desktop\.net\TechLoop\TechLoop.Infrastructure\obj\Debug\net10.0\ref\TechLoop.Infrastructure.dll
-C:\Users\Athila\Desktop\.net\TechLoop\TechLoop.Infrastructure\obj\Debug\net10.0\TechLoop.Infrastructure.sourcelink.json

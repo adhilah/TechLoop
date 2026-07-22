@@ -8,9 +8,9 @@ C:\Users\Athila\Desktop\.net\TechLoop\TechLoop.Application\obj\Debug\net10.0\Tec
 C:\Users\Athila\Desktop\.net\TechLoop\TechLoop.Application\obj\Debug\net10.0\TechLoop.Application.AssemblyInfoInputs.cache
 C:\Users\Athila\Desktop\.net\TechLoop\TechLoop.Application\obj\Debug\net10.0\TechLoop.Application.AssemblyInfo.cs
 C:\Users\Athila\Desktop\.net\TechLoop\TechLoop.Application\obj\Debug\net10.0\TechLoop.Application.csproj.CoreCompileInputs.cache
+C:\Users\Athila\Desktop\.net\TechLoop\TechLoop.Application\obj\Debug\net10.0\TechLoop.Application.sourcelink.json
 C:\Users\Athila\Desktop\.net\TechLoop\TechLoop.Application\obj\Debug\net10.0\TechLoop.723ECF56.Up2Date
 C:\Users\Athila\Desktop\.net\TechLoop\TechLoop.Application\obj\Debug\net10.0\TechLoop.Application.dll
 C:\Users\Athila\Desktop\.net\TechLoop\TechLoop.Application\obj\Debug\net10.0\refint\TechLoop.Application.dll
 C:\Users\Athila\Desktop\.net\TechLoop\TechLoop.Application\obj\Debug\net10.0\TechLoop.Application.pdb
 C:\Users\Athila\Desktop\.net\TechLoop\TechLoop.Application\obj\Debug\net10.0\ref\TechLoop.Application.dll
-C:\Users\Athila\Desktop\.net\TechLoop\TechLoop.Application\obj\Debug\net10.0\TechLoop.Application.sourcelink.json

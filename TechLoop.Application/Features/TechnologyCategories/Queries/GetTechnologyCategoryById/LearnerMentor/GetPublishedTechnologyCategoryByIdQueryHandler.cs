@@ -2,12 +2,12 @@
 using TechLoop.Application.Features.TechnologyCategories.DTOs;
 using TechLoop.Application.Interfaces.Repositories;
 
-namespace TechLoop.Application.Features.TechnologyCategories.Queries.GetTechnologyCategoriesById.LearnerMentor;
+namespace TechLoop.Application.Features.TechnologyCategories.Queries.GetTechnologyCategoryById.LearnerMentor;
 
-public sealed class GetPublishedTechnologyCategoriesByIdQueryHandler : IRequestHandler<GetPublishedTechnologyCategoryByIdQuery, LearnerMentorTechnologyCategoryResponse?>
+public sealed class GetPublishedTechnologyCategoryByIdQueryHandler : IRequestHandler<GetPublishedTechnologyCategoryByIdQuery, LearnerMentorTechnologyCategoryResponse?>
 {
     private readonly ITechnologyCategoryRepository _repository;
-    public GetPublishedTechnologyCategoriesByIdQueryHandler(ITechnologyCategoryRepository repository)
+    public GetPublishedTechnologyCategoryByIdQueryHandler(ITechnologyCategoryRepository repository)
     {
         _repository = repository;
     }

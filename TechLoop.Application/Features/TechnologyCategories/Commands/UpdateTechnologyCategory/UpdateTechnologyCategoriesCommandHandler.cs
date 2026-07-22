@@ -1,33 +1,52 @@
-﻿using MediatR;
+﻿using FluentValidation;
+using MediatR;
 using TechLoop.Application.Features.TechnologyCategories.DTOs;
 using TechLoop.Application.Interfaces.Repositories;
 using TechLoop.Domain.Entities;
 
-namespace TechLoop.Application.Features.TechnologyCategories.Commands.UpdateTechnologyCategories;
+namespace TechLoop.Application.Features.TechnologyCategories.Commands.UpdateTechnologyCategory;
 
-public sealed class UpdateTechnologyCategoryCommandHandler : IRequestHandler<UpdateTechnologyCategoryCommand, UpdateTechnologyCategoryResponse>
+public sealed class UpdateTechnologyCategoryCommandHandler
+    : IRequestHandler<UpdateTechnologyCategoryCommand, UpdateTechnologyCategoryResponse>
 {
     private readonly ITechnologyCategoryRepository _repository;
 
-    public UpdateTechnologyCategoryCommandHandler(ITechnologyCategoryRepository repository)
+    public UpdateTechnologyCategoryCommandHandler(
+        ITechnologyCategoryRepository repository)
     {
         _repository = repository;
     }
 
-    public async Task<UpdateTechnologyCategoryResponse> Handle(UpdateTechnologyCategoryCommand request, CancellationToken cancellationToken)
+    public async Task<UpdateTechnologyCategoryResponse> Handle(
+        UpdateTechnologyCategoryCommand request,
+        CancellationToken cancellationToken)
     {
+        var categoryExists = await _repository.ExistsAsync(request.Id, cancellationToken);
+        if (!categoryExists)
+        {
+            throw new InvalidOperationException("Technology category not found.");
+        }
+        var exists = await _repository.NameExistsAsync(request.Request.Name, request.Id, cancellationToken);;
+        if (exists)
+        {
+            throw new ValidationException($"Technology category '{request.Request.Name}' already exists.");
+        }
+
         var technologyCategory = new TechnologyCategory
         {
-            Id = request.Request.Id,
-            Name = request.Request.Name,
+            Id = request.Id,
+            Name = request.Request.Name.Trim(),
             UpdatedBy = request.UpdatedBy
         };
 
-        await _repository.UpdateAsync(technologyCategory);
+        await _repository.UpdateAsync(
+            technologyCategory,
+            cancellationToken);
+
         return new UpdateTechnologyCategoryResponse
         {
-            Id = technologyCategory.Id,
-            Name = technologyCategory.Name
+            Success = true,
+            Message = "Technology category updated successfully."
         };
     }
 }

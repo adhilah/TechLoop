@@ -1,6 +1,6 @@
 ﻿using FluentValidation;
 
-namespace TechLoop.Application.Features.TechnologyCategories.Commands.CreateTechnologyCategories;
+namespace TechLoop.Application.Features.TechnologyCategories.Commands.CreateTechnologyCategory;
 
 public sealed class CreateTechnologyCategoriesCommandValidator
     : AbstractValidator<CreateTechnologyCategoriesCommand>

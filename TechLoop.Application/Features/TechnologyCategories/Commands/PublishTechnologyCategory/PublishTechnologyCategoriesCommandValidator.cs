@@ -1,7 +1,7 @@
 ﻿using FluentValidation;
 using TechLoop.Application.Interfaces.Repositories;
 
-namespace TechLoop.Application.Features.TechnologyCategories.Commands.PublishTechnologyCategories;
+namespace TechLoop.Application.Features.TechnologyCategories.Commands.PublishTechnologyCategory;
 
 public sealed class PublishTechnologyCategoryCommandValidator : AbstractValidator<PublishTechnologyCategoryCommand>
 {

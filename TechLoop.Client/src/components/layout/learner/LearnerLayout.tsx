@@ -6,33 +6,32 @@ import Footer from "./Footer";
 
 function useAutoHideNavbar(scrollRef: React.RefObject<HTMLDivElement | null>) {
     const [hidden, setHidden] = useState(false);
-    const lastScrollY = useRef(0);
+    const lastScroll = useRef(0);
 
     useEffect(() => {
         const el = scrollRef.current;
         if (!el) return;
 
-        const THRESHOLD = 6;
-        const REVEAL_ZONE = 80;
+        const onScroll = () => {
+            const current = el.scrollTop;
+            const delta = current - lastScroll.current;
 
-        const handleScroll = () => {
-            const currentY = el.scrollTop;
-            const delta = currentY - lastScrollY.current;
-
-            if (currentY < REVEAL_ZONE) {
+            if (current <= 80) {
                 setHidden(false);
-            } else if (delta > THRESHOLD) {
+            } else if (delta > 8) {
                 setHidden(true);
-            } else if (delta < -THRESHOLD) {
+            } else if (delta < -8) {
                 setHidden(false);
             }
 
-            lastScrollY.current = currentY;
+            lastScroll.current = current;
         };
 
-        el.addEventListener("scroll", handleScroll, { passive: true });
+        el.addEventListener("scroll", onScroll, { passive: true });
 
-        return () => el.removeEventListener("scroll", handleScroll);
+        return () => {
+            el.removeEventListener("scroll", onScroll);
+        };
     }, [scrollRef]);
 
     return hidden;
@@ -40,25 +39,24 @@ function useAutoHideNavbar(scrollRef: React.RefObject<HTMLDivElement | null>) {
 
 export default function LearnerLayout() {
     const scrollRef = useRef<HTMLDivElement>(null);
-    const navHidden = useAutoHideNavbar(scrollRef);
+    const hidden = useAutoHideNavbar(scrollRef);
 
     return (
-        <div className="flex h-screen bg-[#081423]">
-            {/* Fixed Sidebar */}
+        <div className="h-screen bg-[#081423] overflow-hidden">
+
+            <Navbar hidden={hidden} />
+
             <Sidebar />
 
-            {/* Right Content */}
-            <div className="ml-64 flex min-h-screen flex-1 flex-col">
-                <Navbar hidden={navHidden} />
+            <div className="ml-64 pt-16 h-screen">
 
-                <main ref={scrollRef} className="flex-1 overflow-y-auto overflow-x-hidden bg-[#081423] pt-20">
-                    {/* Center Content */}
-                    <div className="space-y-8">
+                <div ref={scrollRef} className="h-full overflow-y-auto">
+                    <div className="mx-auto w-full max-w-[1440px] px-8 py-8">
                         <Outlet />
                     </div>
-
                     <Footer />
-                </main>
+                </div>
+
             </div>
         </div>
     );

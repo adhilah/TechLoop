@@ -1,32 +1,16 @@
-﻿import axios from "axios";
+﻿import axios from "../api/axios";
 import type { Technology } from "../types/technology";
 
-const api = axios.create({
-    baseURL: "http://localhost:5264",
-});
-
 class TechnologyService {
-
     async getAll(): Promise<Technology[]> {
-
-        const response = await api.get<Technology[]>(
-            "/technologies"
-        );
-
+        const response = await axios.get<Technology[]>("/technologies");
         return response.data;
-
     }
 
     async getById(id: number): Promise<Technology> {
-
-        const response = await api.get<Technology>(
-            `/technologies/${id}`
-        );
-
+        const response = await axios.get<Technology>(`/technologies/${id}`);
         return response.data;
-
     }
-
 }
 
 export default new TechnologyService();

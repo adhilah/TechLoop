@@ -20,7 +20,8 @@ export async function login(data: {
     if (!response.ok || result.Success === false) {
         throw new Error(result.Message || "Something went wrong");
     }
-
+    console.log(result);
+    localStorage.setItem("accessToken", result.accessToken);
     return result;
 }
 
@@ -44,6 +45,22 @@ export async function register(data: {
 
     if (!response.ok || result.Success === false) {
         throw new Error(result.Message || "Something went wrong");
+    }
+
+    return result;
+}
+
+// LOGOUT
+export async function logout() {
+    const response = await fetch(`${API_URL}/logout`, {
+        method: "POST",
+        credentials: "include",
+    });
+
+    const result = await response.json();
+
+    if (!response.ok) {
+        throw new Error(result.Message || "Logout failed");
     }
 
     return result;

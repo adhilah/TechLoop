@@ -1,7 +1,7 @@
 ﻿using FluentValidation;
 using TechLoop.Application.Interfaces.Repositories;
 
-namespace TechLoop.Application.Features.TechnologyCategories.Commands.DeleteTechnologyCategories;
+namespace TechLoop.Application.Features.TechnologyCategories.Commands.DeleteTechnologyCategory;
 
 public sealed class DeleteTechnologyCategoryCommandValidator : AbstractValidator<DeleteTechnologyCategoryCommand>
 {

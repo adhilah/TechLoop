@@ -1,116 +1,141 @@
-import { AtSign, MessageSquare, Code2 } from "lucide-react";
+import { MessageSquare, Mail } from "lucide-react";
 
-interface FooterLink {
-    label: string;
-    href: string;
-}
-
-interface FooterColumn {
-    title: string;
-    links: FooterLink[];
-}
-
-const columns: FooterColumn[] = [
+const footerLinks = [
     {
-        title: "Product",
+        title: "Platform",
         links: [
-            { label: "Practice", href: "#" },
-            { label: "Classrooms", href: "#" },
-            { label: "AI Mentor", href: "#" },
-            { label: "Leaderboard", href: "#" },
+            "Learn",
+            "Practice",
+            "Coding",
+            "AI Mentor",
         ],
     },
     {
         title: "Resources",
         links: [
-            { label: "Documentation", href: "#" },
-            { label: "API reference", href: "#" },
-            { label: "Community", href: "#" },
-            { label: "Status", href: "#" },
+            "Documentation",
+            "API",
+            "Community",
+            "Blog",
         ],
     },
     {
         title: "Company",
         links: [
-            { label: "About", href: "#" },
-            { label: "Privacy", href: "#" },
-            { label: "Terms", href: "#" },
-            { label: "Contact", href: "#" },
+            "About",
+            "Privacy",
+            "Terms",
+            "Contact",
         ],
     },
 ];
 
-const socials = [
-    { icon: AtSign, href: "#", label: "Email" },
-    { icon: MessageSquare, href: "#", label: "Community forum" },
-    { icon: Code2, href: "#", label: "GitHub" },
-];
-
 export default function Footer() {
     return (
-        <footer className="w-full border-t border-white/5 bg-[#0a1224]/80 backdrop-blur-md font-sans">
-            <div className="max-w-7xl mx-auto px-6 py-16">
-                <div className="grid grid-cols-2 md:grid-cols-5 gap-10">
+        <footer className="border-t border-white/5 bg-[#0A1930]">
+            <div className="mx-auto max-w-[1440px] px-8 py-10">
+
+                <div className="grid gap-10 md:grid-cols-[2fr_1fr_1fr_1fr]">
+
                     {/* Brand */}
-                    <div className="col-span-2 space-y-4">
-                        <div className="flex items-center gap-2">
-                            <div className="w-8 h-8 bg-teal-400 rounded-lg flex items-center justify-center text-[#0a1224] font-bold text-sm">
+
+                    <div>
+
+                        <div className="flex items-center gap-3">
+
+                            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#17D4C3] font-bold text-[#081423]">
                                 TL
                             </div>
-                            <h2 className="text-xl font-bold text-white">TechLoop</h2>
+
+                            <div>
+
+                                <h2 className="text-lg font-semibold text-white">
+                                    TechLoop
+                                </h2>
+
+                                <p className="text-sm text-slate-500">
+                                    Learn • Practice • Build
+                                </p>
+
+                            </div>
+
                         </div>
-                        <p className="text-sm leading-relaxed text-slate-400 max-w-xs">
-                            Where AI assistance meets human expertise. Practice, learn, and
-                            ship with a developer platform built for depth of focus.
+
+                        <p className="mt-5 max-w-md text-sm leading-7 text-slate-400">
+                            A modern learning platform for developers to master
+                            technologies, solve coding challenges, collaborate
+                            with the community, and accelerate career growth.
                         </p>
-                        <div className="flex items-center gap-2 pt-1">
-                            {socials.map(({ icon: Icon, href, label }) => (
-        
-                                <a key={label}
-                                href={href}
-                                aria-label={label}
-                                className="w-8 h-8 rounded-lg border border-white/5 flex items-center justify-center text-slate-400 hover:text-teal-400 hover:border-teal-400/40 transition-colors"
-                                >
-                                <Icon size={16} strokeWidth={1.5} />
-                                </a>
-                                ))}
+
+                        <div className="mt-6 flex gap-3">
+
+                            {/*<button className="flex h-10 w-10 items-center justify-center rounded-lg border border-white/5 text-slate-400 transition hover:border-[#17D4C3]/30 hover:text-[#17D4C3]">*/}
+                            {/*    <Github size={18} />*/}
+                            {/*</button>*/}
+
+                            <button className="flex h-10 w-10 items-center justify-center rounded-lg border border-white/5 text-slate-400 transition hover:border-[#17D4C3]/30 hover:text-[#17D4C3]">
+                                <MessageSquare size={18} />
+                            </button>
+
+                            <button className="flex h-10 w-10 items-center justify-center rounded-lg border border-white/5 text-slate-400 transition hover:border-[#17D4C3]/30 hover:text-[#17D4C3]">
+                                <Mail size={18} />
+                            </button>
+
                         </div>
+
                     </div>
 
-                    {/* Link columns */}
-                    {columns.map((col) => (
-                        <nav key={col.title} className="space-y-3">
-                            <p className="text-[11px] font-semibold text-slate-500 uppercase tracking-widest mb-2">
-                                {col.title}
-                            </p>
-                            <ul className="flex flex-col gap-2">
-                                {col.links.map((link) => (
-                                    <li key={link.label}>
+                    {footerLinks.map((section) => (
 
-                                       <a href={link.href}
-                                        className="text-sm text-slate-400 hover:text-teal-400 transition-colors"
+                        <div key={section.title}>
+
+                            <h3 className="mb-4 text-xs font-semibold uppercase tracking-widest text-slate-500">
+                                {section.title}
+                            </h3>
+
+                            <ul className="space-y-3">
+
+                                {section.links.map((link) => (
+
+                                    <li key={link}>
+
+                                        <a
+                                            href="#"
+                                            className="text-sm text-slate-400 transition hover:text-[#17D4C3]"
                                         >
-                                        {link.label}
-                                    </a>
+                                            {link}
+                                        </a>
+
                                     </li>
-                                    ))}
+
+                                ))}
+
                             </ul>
-                        </nav>
-                        ))}
+
+                        </div>
+
+                    ))}
+
                 </div>
 
-                {/* Bottom bar */}
-                <div className="mt-16 pt-6 border-t border-white/5 flex flex-col md:flex-row items-center justify-between gap-4">
-                    <p className="text-[11px] text-slate-500">
+                <div className="mt-10 flex flex-col items-center justify-between gap-3 border-t border-white/5 pt-6 text-sm text-slate-500 md:flex-row">
+
+                    <p>
                         © {new Date().getFullYear()} TechLoop. All rights reserved.
                     </p>
+
                     <div className="flex items-center gap-2">
-                        <span className="w-1.5 h-1.5 rounded-full bg-teal-400" />
-                        <span className="text-[11px] text-slate-500 font-mono">
-                            v2.4.1 · all systems operational
+
+                        <span className="h-2 w-2 rounded-full bg-emerald-400"></span>
+
+                        <span>
+                            All systems operational
                         </span>
+
                     </div>
+
                 </div>
+
             </div>
         </footer>
     );

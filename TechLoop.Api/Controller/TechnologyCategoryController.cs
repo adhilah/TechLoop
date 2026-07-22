@@ -7,7 +7,7 @@ using TechLoop.Application.Features.TechnologyCategories.Queries.GetTechnologyCa
 namespace TechLoop.Api.Controllers;
 
 [ApiController]
-[Route("api/technology-categories")]
+[Route("technology-categories")]
 [Authorize(Roles = "Learner,Mentor")]
 public sealed class TechnologyCategoryController : ControllerBase
 {
