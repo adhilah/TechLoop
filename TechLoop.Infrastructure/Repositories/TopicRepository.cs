@@ -1,8 +1,9 @@
-﻿using System.Data;
-using Dapper;
+﻿using Dapper;
 using TechLoop.Application.Interfaces.Repositories;
 using TechLoop.Application.Interfaces.Infrastructure;
 using TechLoop.Domain.Entities;
+
+//using TechLoop.Infrastructure.Persistence.Context;
 
 namespace TechLoop.Infrastructure.Repositories;
 
@@ -14,23 +15,14 @@ public sealed class TopicRepository : ITopicsRepository
     {
         _context = context;
     }
-    //ExistsAync
-    public async Task<bool> ExistsAsync(int technologyId ,string title, CancellationToken cancellationToken)
+
+    // Check whether a topic with the same title already exists.
+    public async Task<bool> ExistsAsync(int technologyId, string title, CancellationToken cancellationToken)
     {
-        const string sql = @"
-SELECT EXISTS
-(
-    SELECT 1
-    FROM topics
-    WHERE technology_id = @TechnologyId
-    AND LOWER(title) = LOWER(@Title)
-    AND deleted_at IS NULL
-);";
-
         using var connection = _context.CreateConnection();
-
-        return await connection.ExecuteScalarAsync<bool>(new CommandDefinition(
-                sql,
+        return await connection.ExecuteScalarAsync<bool>(
+            new CommandDefinition(
+                "SELECT fn_topic_exists(@TechnologyId,@Title);",
                 new
                 {
                     TechnologyId = technologyId,
@@ -39,42 +31,27 @@ SELECT EXISTS
                 cancellationToken: cancellationToken));
     }
 
-    //SlugExists
+    // Check whether the topic slug already exists.
     public async Task<bool> SlugExistsAsync(string slug, CancellationToken cancellationToken)
     {
-        const string sql = @"
-SELECT EXISTS
-(
-    SELECT 1
-    FROM topics
-    WHERE LOWER(slug) = LOWER(@Slug)
-    AND deleted_at IS NULL
-);";
         using var connection = _context.CreateConnection();
         return await connection.ExecuteScalarAsync<bool>(
             new CommandDefinition(
-                sql,
-                new { Slug = slug },
+                "SELECT fn_topic_slug_exists(@Slug);",
+                new
+                {
+                    Slug = slug
+                },
                 cancellationToken: cancellationToken));
     }
-    
-    
-    //PositionExists
+
+    // Check whether the position already exists within the technology.
     public async Task<bool> PositionExistsAsync(int technologyId, int position, CancellationToken cancellationToken)
     {
-        const string sql = @"
-SELECT EXISTS
-(
-    SELECT 1
-    FROM topics
-    WHERE technology_id=@TechnologyId
-    AND position=@Position
-    AND deleted_at IS NULL
-);";
         using var connection = _context.CreateConnection();
         return await connection.ExecuteScalarAsync<bool>(
             new CommandDefinition(
-                sql,
+                "SELECT fn_topic_position_exists(@TechnologyId,@Position);",
                 new
                 {
                     TechnologyId = technologyId,
@@ -82,245 +59,159 @@ SELECT EXISTS
                 },
                 cancellationToken: cancellationToken));
     }
-    //TechnologyExistsAsync
+
+    // Check whether the technology exists.
     public async Task<bool> TechnologyExistsAsync(int technologyId, CancellationToken cancellationToken)
     {
-        const string sql = @"
-SELECT EXISTS
-(
-    SELECT 1
-    FROM technologies
-    WHERE id = @TechnologyId
-);";
-
         using var connection = _context.CreateConnection();
-
         return await connection.ExecuteScalarAsync<bool>(
             new CommandDefinition(
-                sql,
-                new { TechnologyId = technologyId },
+                "SELECT fn_topic_technology_exists(@TechnologyId);",
+                new
+                {
+                    TechnologyId = technologyId
+                },
                 cancellationToken: cancellationToken));
     }
-    //create topic
+
+    // Create a new topic.
     public async Task<int> CreateAsync(Topic topic, CancellationToken cancellationToken)
     {
-        const string sql = @"
-INSERT INTO topics
-(
-    technology_id,
-    title,
-    slug,
-    description,
-    image_url,
-    position,
-    created_by,
-    created_at
-)
-VALUES
-(
-    @TechnologyId,
-    @Title,
-    @Slug,
-    @Description,
-    @ImageUrl,
-    @Position,
-    @CreatedBy,
-    @CreatedAt
-)
-RETURNING id;
-";
-
         using var connection = _context.CreateConnection();
-
         return await connection.ExecuteScalarAsync<int>(
-            new CommandDefinition(sql, topic, cancellationToken: cancellationToken));
+            new CommandDefinition(
+                """
+                SELECT fn_create_topic
+                (
+                    @TechnologyId,
+                    @Title,
+                    @Slug,
+                    @Description,
+                    @ImageUrl,
+                    @Position,
+                    @CreatedBy,
+                    @CreatedAt
+                );
+                """,
+                topic,
+                cancellationToken: cancellationToken));
     }
     
-    //update topic
-    public async Task<int> UpdateAsync(Topic topic, CancellationToken cancellationToken)
-    {
-        const string sql = @"
-UPDATE topics
-SET
-    technology_id = @TechnologyId,
-    title = @Title,
-    slug = @Slug,
-    description = @Description,
-    image_url = @ImageUrl,
-    position = @Position,
-    updated_by = @UpdatedBy,
-    updated_at = @UpdatedAt
-WHERE id = @Id
-AND deleted_at IS NULL;
-";
-        using var connection = _context.CreateConnection();
 
-        var rowsAffected = await connection.ExecuteAsync(sql, new
-        {
-            topic.Id,
-            topic.TechnologyId,
-            topic.Title,
-            topic.Description,
-            topic.Slug,
-            topic.ImageUrl,
-            topic.Position,
-            topic.UpdatedBy,
-            topic.UpdatedAt
-
-        });
-        
-        return rowsAffected;
-    }
-    
-    
-    //soft delete
-    public async Task<int> SoftDeleteAsync(int id, Guid deletedBy, CancellationToken cancellationToken)
-    {
-        const string sql = @"
-UPDATE  topics
-SET  deleted_at = @DeletedAt,
-    deleted_by= @DeletedBy
-WHERE id = @Id
-AND deleted_at is null;
-";
-
-        using var connection = _context.CreateConnection();
-        return await connection.ExecuteAsync(sql, new
-        {
-            Id = id,
-            DeletedAt = DateTime.UtcNow,
-            DeletedBy = deletedBy
-        });
-    }
-    
-    //Get all topics(for mentor)
-    public async Task<IEnumerable<Topic>> GetAllAsync( CancellationToken cancellationToken)
-    {
-        const string sql = @"
-SELECT id,
-        technology_id,
-        title,
-        description,
-        slug,
-        image_url,
-        position,
-        published_at AS PublishedAt,
-        published_by AS PublishedBy,
-        created_at AS CreatedAt,
-        created_by AS CreatedBy,
-        updated_at AS UpdatedAt,
-        updated_by as UpdatedBy
-FROM topics
-WHERE deleted_at is null
-ORDER BY Position;
-";
-        using var connection = _context.CreateConnection();
-        return await connection.QueryAsync<Topic>(
-            new CommandDefinition(sql, cancellationToken: cancellationToken));
-    }
-    
-    //get topic by id (for mentor)
-
+    // Get a topic by its ID.
     public async Task<Topic?> GetByIdAsync(int id, CancellationToken cancellationToken)
     {
-        const string sql = @"
-SELECT
-    id,
-    technology_id AS TechnologyId,
-    title,
-    description,
-    slug,
-    image_url,
-    position,
-    published_at AS PublishedAt,
-    published_by AS PublishedBy,
-    created_at AS CreatedAt,
-    created_by AS CreatedBy,
-    updated_at AS UpdatedAt,
-    updated_by AS UpdatedBy
-FROM topics
-WHERE id = @Id
-AND deleted_at IS NULL;
-";
         using var connection = _context.CreateConnection();
-        
-        return await  connection.QuerySingleOrDefaultAsync<Topic>(
-            new CommandDefinition(sql, 
+        return await connection.QuerySingleOrDefaultAsync<Topic>(
+            new CommandDefinition(
+                "SELECT * FROM fn_get_topic_by_id(@Id);",
                 new
                 {
                     Id = id
                 },
                 cancellationToken: cancellationToken));
     }
-    
-    //update publish
-    public async Task<int> PublishAsync(Topic topic, CancellationToken cancellationToken)
-    {
-        const string sql = @"
-UPDATE topics
-SET
-    published_at = @PublishedAt,
-    published_by = @PublishedBy
-WHERE id = @Id
-AND deleted_at IS NULL;";
 
-        using var connection = _context.CreateConnection();
-        return await connection.ExecuteAsync(new CommandDefinition(sql, topic, cancellationToken: cancellationToken));
-    }
     
-    //get published all topic (for learner)
-    public async Task<IEnumerable<Topic>> GetPublishedAsync(
-    CancellationToken cancellationToken)
+    // Update an existing topic.
+    public async Task<int> UpdateAsync(Topic topic, CancellationToken cancellationToken)
     {
-        const string sql = @"
-SELECT
-    id,
-    technology_id AS TechnologyId,
-    title,
-    slug,
-    description,
-    image_url AS ImageUrl,
-    position
-FROM topics
-WHERE
-    published_at IS NOT NULL
-AND deleted_at IS NULL
-ORDER BY position;";
-
         using var connection = _context.CreateConnection();
 
-        return await connection.QueryAsync<Topic>(
+        return await connection.ExecuteAsync(
             new CommandDefinition(
-                sql,
+                """
+                CALL sp_update_topic
+                (
+                    @Id,
+                    @TechnologyId,
+                    @Title,
+                    @Slug,
+                    @Description,
+                    @ImageUrl,
+                    @Position,
+                    @UpdatedBy,
+                    @UpdatedAt
+                );
+                """,
+                topic,
                 cancellationToken: cancellationToken));
     }
-   
-    //get published topic by id( for learner)
-    public async Task<Topic?> GetPublishedByIdAsync(
-        int id,
-        CancellationToken cancellationToken)
+    
+
+    // Soft delete a topic.
+    public async Task<int> SoftDeleteAsync(int id, Guid deletedBy, CancellationToken cancellationToken)
     {
-        const string sql = @"
-SELECT
-    id,
-    technology_id AS TechnologyId,
-    title,
-    slug,
-    description,
-    image_url AS ImageUrl,
-    position
-FROM topics
-WHERE
-    id = @Id
-AND published_at IS NOT NULL
-AND deleted_at IS NULL;";
-
         using var connection = _context.CreateConnection();
+        return await connection.ExecuteAsync(
+            new CommandDefinition(
+                """
+                CALL sp_soft_delete_topic
+                (
+                    @Id,
+                    @DeletedBy,
+                    @DeletedAt
+                );
+                """,
+                new
+                {
+                    Id = id,
+                    DeletedBy = deletedBy,
+                    DeletedAt = DateTime.UtcNow
+                },
+                cancellationToken: cancellationToken));
+    }
+    
+    // Get all active topics.
+    public async Task<IEnumerable<Topic>> GetAllAsync(CancellationToken cancellationToken)
+    {
+        using var connection = _context.CreateConnection();
+        return await connection.QueryAsync<Topic>(
+            new CommandDefinition(
+                "SELECT * FROM fn_get_all_topics();",
+                cancellationToken: cancellationToken));
+    }
 
+    // Publish a topic.
+    public async Task<int> PublishAsync(Topic topic, CancellationToken cancellationToken)
+    {
+        using var connection = _context.CreateConnection();
+        return await connection.ExecuteAsync(
+            new CommandDefinition(
+                """
+                CALL sp_publish_topic
+                (
+                    @Id,
+                    @PublishedBy,
+                    @PublishedAt
+                );
+                """,
+                topic,
+                cancellationToken: cancellationToken));
+    }
+    
+    
+    // Get all published topics.
+    public async Task<IEnumerable<Topic>> GetPublishedAsync(CancellationToken cancellationToken)
+    {
+        using var connection = _context.CreateConnection();
+        return await connection.QueryAsync<Topic>(
+            new CommandDefinition("SELECT * FROM fn_get_published_topics();", cancellationToken: cancellationToken));
+    }
+    
+
+    // Get a published topic by its ID.
+    public async Task<Topic?> GetPublishedByIdAsync(int id, CancellationToken cancellationToken)
+    {
+        using var connection = _context.CreateConnection();
         return await connection.QuerySingleOrDefaultAsync<Topic>(
             new CommandDefinition(
-                sql,
-                new { Id = id },
+                "SELECT * FROM fn_get_published_topic_by_id(@Id);",
+                new
+                {
+                    Id = id
+                },
                 cancellationToken: cancellationToken));
     }
 }
+    
